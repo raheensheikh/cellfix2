@@ -1,0 +1,880 @@
+@media (max-width: 1440px) {
+  .serviceImage {
+    height: 350px;
+    object-fit: contain;
+    border-radius: 12px !important;
+  }
+  .servicesData .headingBold {
+    font-size: 55px;
+  }
+  .servicesData .title {
+    font-size: 30px;
+  }
+  .servicesData .para {
+    font-size: 20px;
+  }
+  .locationBox_img img {
+    height: 180px;
+    width: 185px;
+  }
+  .headingBold {
+    font-size: 50px;
+  }
+  .locationBox_content .addresss {
+    font-size: 18px;
+  }
+  .locationBox_content .name {
+    font-size: 25px;
+  }
+  .heading {
+    font-size: 55px;
+  }
+  .footer-logo {
+    width: 350px;
+    height: 70px;
+  }
+  footer .heading {
+    font-size: 40px;
+  }
+  .footer-links a {
+    font-size: 20px;
+  }
+  .icon {
+    max-width: 25px;
+  }
+  .locationBox {
+    width: 530px;
+  }
+  footer {
+    height: 350px;
+  }
+  .subTitle {
+    font-size: 45px;
+  }
+  .homeSlides_img img {
+    height: 400px;
+  }
+  .productCard_title {
+    font-size: 20px;
+  }
+  .checkout_section .heading {
+    font-size: 36px;
+  }
+  .checkout_section .redText {
+    font-size: 20px;
+  }
+  .title2 {
+    font-size: 30px;
+  }
+  .details_section .heading {
+    font-size: 28px;
+  }
+  .searchField {
+    height: 55px;
+  }
+  .locationBg .heading {
+    font-size: 50px;
+  }
+  .onlineRepair_section .heading {
+    font-size: 35px;
+  }
+  .about_section .title2 {
+    font-size: 22px;
+  }
+  .productCard_image {
+    width: 100%;
+    height: 140px;
+  }
+}
+
+@media (max-width: 1366px) {
+  .logo {
+    width: 160px;
+    height: 32px;
+  }
+  .nav-link {
+    font-size: 18px !important;
+  }
+  .headingBold {
+    font-size: 45px;
+  }
+  .heading {
+    font-size: 50px;
+  }
+  .servicesData .headingBold {
+    font-size: 50px;
+  }
+  .servicesData .title {
+    font-size: 25px;
+  }
+  .subTitle {
+    font-size: 35px;
+  }
+  .homeSlides_content .para {
+    font-size: 20px;
+  }
+  .onlineRepair_section .heading {
+    font-size: 30px;
+  }
+  .input-label {
+    font-size: 16px;
+  }
+  .input-field {
+    font-size: 16px;
+    height: 45px;
+  }
+  .buildPc img {
+    width: 200px;
+    height: 300px;
+    object-fit: contain;
+  }
+  .buildPc .title2 {
+    font-size: 25px;
+  }
+  .repair-section .title2 {
+    font-size: 20px;
+  }
+  .brand-item {
+    padding: 10px;
+    height: 55px;
+  }
+  .brand-item img {
+    max-width: 60px;
+  }
+}
+@media (max-width: 1280px) {
+  .footer-logo {
+    width: 300px;
+    height: 58px;
+  }
+  .reviewTitle {
+    font-size: 30px;
+  }
+  .productCard_title {
+    font-size: 18px;
+    height: 45px;
+  }
+}
+@media (max-width: 1200px) {
+  .homeSlides_content .para {
+    font-size: 18px;
+  }
+  .productCard .btn_sec {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .locationBox {
+    width: 450px;
+  }
+  .locationBox_img img {
+    height: 155px;
+    width: 160px;
+  }
+  .checkout_section .heading {
+    font-size: 30px;
+  }
+  .checkout_section .redText {
+    font-size: 18px;
+  }
+  .orderItem .title2 {
+    font-size: 16px;
+  }
+  .onlineRepair_section .heading {
+    font-size: 25px;
+  }
+  .buildPc .title2 {
+    font-size: 20px;
+  }
+  .issues {
+    font-size: 14px;
+  }
+  .unlockingBox .heading {
+    font-size: 45px;
+  }
+  .unlockingBox .para {
+    font-size: 18px;
+  }
+}
+@media (max-width: 1140px) {
+  .headingBold {
+    font-size: 40px;
+  }
+  .navbar {
+    gap: 25px;
+  }
+  .nav-link {
+    font-size: 16px !important;
+  }
+  .tilte {
+    font-size: 20px;
+  }
+  .homeSlides_img img {
+    height: 325px;
+  }
+  .details_section .heading {
+    font-size: 24px;
+  }
+  .details_section .title2 {
+    font-size: 16px;
+  }
+  .heading {
+    font-size: 40px;
+  }
+}
+@media (max-width: 1024px) {
+  .burger {
+    display: block;
+    /* position: absolute;
+    left: 10px;
+    top: 15px; */
+    z-index: 20;
+  }
+
+  .navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: white;
+    height: 100vh;
+    width: 250px;
+    flex-direction: column;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    padding-top: 60px;
+    justify-content: flex-start;
+    z-index: 10;
+    box-shadow: -2px 0 5px rgb(0 0 0 / 62%);
+
+    border-radius: 0px 40px 0px 0px;
+  }
+
+  .navbar.open {
+    transform: translateX(0);
+  }
+
+  /* Only show dropdown-menu if parent has .active class */
+  .nav-link.dropdown .dropdown-menu {
+    display: none;
+  }
+
+  .nav-link.dropdown.active .dropdown-menu {
+    display: block;
+  }
+
+  /* 
+  .dropdown-menu {
+    position: static;
+    display: block;
+  } */
+  .border-bottom {
+    border-bottom: 1px solid #e5e5e5 !important;
+    width: 100%;
+  }
+  .icon {
+    max-width: 20px;
+  }
+  .nav-link {
+    height: 45px;
+    display: flex;
+    width: 100%;
+    font-size: 18px !important;
+    border-bottom: none !important;
+    justify-content: flex-start;
+    margin-left: 20px;
+    text-align: start;
+    align-items: center;
+  }
+  .header {
+    height: 80px;
+  }
+  .reviewTitle {
+    font-size: 20px;
+  }
+  .servicesData .headingBold {
+    font-size: 32px;
+  }
+  .servicesData .title {
+    font-size: 20px;
+  }
+  .servicesData .para {
+    font-size: 18px;
+  }
+  .locationBox_img img {
+    height: 140px;
+    width: 140px;
+  }
+  .locationBox_content .name {
+    font-size: 20px;
+  }
+  .locationBox_content .addresss {
+    font-size: 16px;
+  }
+  .locationBox {
+    width: 325px;
+    flex-direction: column;
+  }
+  .container {
+    max-width: 100%;
+  }
+  .footer-left {
+    height: 100%;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+  }
+  .footer-logo {
+    width: 220px;
+    height: 42px;
+  }
+  footer .heading {
+    font-size: 25px;
+  }
+  .footer-links a {
+    font-size: 16px;
+  }
+  .itemFeatures {
+    width: 100%;
+  }
+  .productCard_title {
+    font-size: 16px;
+  }
+  .services_banner {
+    height: 200px;
+  }
+}
+@media (max-width: 991px) {
+  .locationBox_img img {
+    height: 120px;
+    width: 125px;
+  }
+  .heading {
+    font-size: 40px;
+  }
+  .serviceImage {
+    height: 300px;
+  }
+  footer {
+    padding: 20px;
+  }
+  .searchField2 {
+    border-radius: 6px;
+    height: 40px;
+  }
+  .detailImage img {
+    width: 250px;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 12px;
+  }
+  .locationBg .heading {
+    font-size: 40px;
+  }
+  .locationBg .para {
+    font-size: 16px;
+  }
+  .searchField {
+    height: 50px;
+  }
+  .searchField {
+    padding: 2px;
+  }
+  .searchField input {
+    font-size: 16px;
+  }
+  .searchField2 {
+    height: 40px !important;
+  }
+  .buildPc .title2 {
+    font-size: 18px;
+    margin-bottom: 0 !important;
+  }
+  .brand-item {
+    height: 45px;
+  }
+  .css-4vcz7u-control {
+    min-height: 45px !important;
+  }
+  .css-hlgwow {
+    font-size: 14px;
+  }
+  .unlockingBox .heading {
+    font-size: 35px;
+  }
+  p.companydesc {
+    font-size: 18px;
+  }
+  .swiper-backface-hidden .swiper-slide {
+    height: 100px !important;
+  }
+  .locationBg {
+    padding: 20px;
+  }
+}
+@media (max-width: 910px) {
+  .headingBold {
+    font-size: 30px;
+  }
+  .homeSlides_content .para {
+    font-size: 16px;
+  }
+  .servicesData .para {
+    font-size: 16px;
+  }
+  .servicesData .title {
+    font-size: 18px;
+  }
+  .servicesData .headingBold {
+    font-size: 28px;
+  }
+  .footer-right {
+    margin: 0;
+  }
+  .footer-logo {
+    width: 170px;
+    height: 34px;
+  }
+  .productCard_image {
+    width: 160px;
+    height: 120px;
+  }
+  .search-icon {
+    font-size: 16px;
+  }
+  .nav-item .nav-link {
+    min-width: 100px;
+    height: 45px;
+  }
+  .nav-item .nav-link img {
+    max-width: 55px;
+    max-height: 40px;
+  }
+  .locationBg {
+    padding: 20px !important;
+  }
+}
+@media (max-width: 768px) {
+  .homeSlides_img img {
+    height: 175px;
+  }
+  .productCard .btn_sec {
+    flex-direction: row;
+  }
+  .logo {
+    width: 140px;
+    height: 28px;
+  }
+  .header {
+    height: 70px;
+  }
+  .swiper-horizontal > .swiper-pagination-bullets,
+  .swiper-pagination-bullets.swiper-pagination-horizontal {
+    bottom: 0 !important;
+  }
+  .swiper-pagination-bullet {
+    height: 5px !important;
+  }
+  .cta {
+    height: 40px;
+    font-size: 14px !important;
+  }
+  .headingBold {
+    font-size: 22px;
+  }
+  .tilte {
+    font-size: 18px;
+  }
+  .homeSlides_content .para {
+    font-size: 14px;
+  }
+  .reviewsBox {
+    padding: 25px;
+  }
+  .reviewTitle {
+    font-size: 18px;
+  }
+  .heading {
+    font-size: 30px;
+  }
+  .subTitle {
+    font-size: 20px;
+  }
+  .locationBox {
+    width: 250px;
+  }
+  .locationBox_content .name {
+    font-size: 18px;
+  }
+  .locationBox_content .addresss {
+    font-size: 14px;
+  }
+  .locationBox_content .cta {
+    height: 38px;
+    font-size: 12px !important;
+  }
+  footer .border-bottom {
+    margin: 20px !important;
+  }
+  .checkout_section .heading {
+    font-size: 26px;
+  }
+  .orderItem {
+    padding: 10px;
+  }
+  .shop_section .productCard .btn_sec {
+    flex-direction: column !important;
+  }
+  .searchField input {
+    font-size: 16px !important;
+  }
+  .details_section .heading {
+    font-size: 20px;
+  }
+  .buildPc img {
+    width: 175px;
+    height: 150px;
+  }
+  .para {
+    font-size: 14px;
+  }
+  .about_section .title2 {
+    font-size: 18px;
+  }
+  footer .heading {
+    font-size: 20px;
+  }
+  .repair_right img {
+    height: 300px;
+  }
+  .unlockLeft-img img {
+    height: 175px;
+    object-fit: contain;
+  }
+  .repair-section .row {
+    flex-direction: column-reverse !important;
+  }
+  .repair-section .title2 {
+    font-size: 18px;
+  }
+  .brand-container {
+    gap: 10px;
+  }
+  .unlockingBox .row {
+    flex-direction: column-reverse;
+  }
+  .unlockingBox .heading {
+    font-size: 30px;
+  }
+  .unlockingBox .para {
+    font-size: 16px;
+  }
+  p.companydesc {
+    font-size: 16px;
+  }
+  .services_banner {
+    height: 150px;
+  }
+  .searchField {
+    height: 45px;
+  }
+  .locationBg .heading {
+    font-size: 32px;
+  }
+}
+@media (max-width: 575px) {
+  footer {
+    height: fit-content;
+  }
+  .footer-right {
+    margin: 15px 0;
+  }
+  .footer-links {
+    gap: 10px;
+  }
+  .locationBox_img img {
+    height: 100px;
+    width: 100px;
+  }
+  .locationBox {
+    width: 240px;
+  }
+  .serviceImage {
+    height: 150px;
+    margin-bottom: 10px;
+  }
+  .homeSlides_img img {
+    height: 200px;
+    object-fit: contain;
+  }
+  .reviewsBox .border-right {
+    border-right: none !important;
+  }
+  .productCard_image {
+    width: 130px;
+    height: 100px;
+  }
+  .productCard .btn_sec {
+    flex-direction: column;
+  }
+  .servicesData .headingBold {
+    font-size: 22px;
+  }
+  .servicesData .title {
+    font-size: 16px;
+  }
+  .servicesData .para {
+    font-size: 14px;
+  }
+  .logo {
+    width: 100px;
+    height: 20px;
+  }
+  .orderItem img {
+    width: 100px;
+    height: 90px;
+  }
+  .orderItem .title2 {
+    font-size: 14px;
+  }
+  .orderItem .price {
+    font-size: 14px;
+  }
+  .checkout_section .heading {
+    font-size: 20px;
+  }
+  .boldText {
+    font-size: 14px;
+  }
+  .price {
+    font-size: 14px;
+  }
+  .checkout_section .input-label {
+    font-size: 14px;
+  }
+  .checkout_section .btn_sec {
+    flex-direction: column;
+    gap: 6px;
+  }
+  .checkout_section .btn_sec .cta {
+    width: 100%;
+  }
+  .allStores {
+    justify-content: center;
+  }
+  .tabs_content {
+    padding: 10px;
+  }
+  .productCard {
+    /* width: 275px; */
+    padding: 5px;
+  }
+  .searchField2 {
+    width: 75%;
+  }
+  .color-circle {
+    width: 30px;
+    height: 30px;
+  }
+  .color-options {
+    gap: 10px;
+  }
+  .input-label {
+    font-size: 14px;
+  }
+  .input-field {
+    font-size: 14px;
+    height: 40px;
+  }
+  .onlineRepair_section .heading {
+    font-size: 20px;
+  }
+  .onlineRepair_section .border-right {
+    border-right: none;
+  }
+  .productCard_title {
+    font-size: 14px;
+  }
+  footer {
+    padding: 20px 5px;
+  }
+  .header {
+    height: 55px;
+    padding: 5px;
+  }
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .cart_option img {
+    width: 25px;
+    height: 25px;
+  }
+  .header-right .cta {
+    height: 35px;
+  }
+  .burger {
+    font-size: 22px;
+  }
+  section {
+    margin: 5px 0;
+  }
+  .issues img {
+    max-width: 12px !important;
+  }
+  .issuesText {
+    font-size: 12px !important;
+  }
+  .unlockingBox .heading {
+    font-size: 20px;
+  }
+
+  .unlockingBox .para {
+    font-size: 14px;
+  }
+  p.companydesc {
+    font-size: 14px;
+  }
+  .unlockingBox {
+    padding: 10px;
+  }
+  .swiper-backface-hidden .swiper-slide {
+    height: 80px !important;
+  }
+  .nav-item .nav-link {
+    min-width: 60px;
+    height: 40px;
+    margin-left: 0px;
+  }
+  .nav-item .nav-link img {
+    max-width: 45px;
+    max-height: 35px;
+  }
+  .locationBg .heading {
+    font-size: 20px;
+  }
+  .locationBg .para {
+    font-size: 14px;
+  }
+  .locationBg {
+    padding: 15px 10px !important;
+  }
+  .offcanvas-cart {
+    width: calc(100% - 30px);
+  }
+  .cart-header .title2 {
+    font-size: 20px;
+  }
+  .closebtn {
+    font-size: 12px;
+  }
+  .nav-link {
+    height: 30px;
+    font-size: 16px !important;
+  }
+  .navbar {
+    width: 175px;
+  }
+  .modal-body {
+    padding: 10px !important;
+  }
+  .modal-title {
+    font-size: 20px;
+  }
+}
+@media (max-width: 425px) {
+  .para {
+    font-size: 14px;
+  }
+  .checkout_section .heading {
+    font-size: 18px;
+  }
+  .counterBtn {
+    padding: 0px 4px;
+  }
+  .qty {
+    min-width: 10px;
+    font-size: 14px;
+  }
+  .device-item {
+    padding: 8px;
+    font-size: 14px;
+  }
+  .input-field {
+    height: 40px;
+    font-size: 14px !important;
+  }
+  .input-label {
+    font-size: 14px;
+  }
+  .cards {
+    width: 60px;
+    height: 35px;
+  }
+  main.content-body {
+    padding: 5px;
+  }
+  section {
+    margin: 12px 0;
+  }
+  .heading {
+    font-size: 20px;
+  }
+  .searchField input {
+    font-size: 14px !important;
+  }
+  .tabs_content {
+    padding: 10px 5px;
+  }
+  .details_section .heading {
+    font-size: 16px;
+  }
+  .itmeDesc li {
+    font-size: 12px;
+  }
+  .details_section .title2 {
+    font-size: 14px;
+  }
+  .itemFeatures .boldTitle {
+    font-size: 12px;
+  }
+  .itemFeatures .text {
+    font-size: 12px;
+  }
+  .searchField2 {
+    height: 35px !important;
+  }
+  .search-icon {
+    font-size: 12px;
+  }
+  .buildPc .title2 {
+    font-size: 16px;
+  }
+  .buildPc li {
+    font-size: 12px;
+  }
+  .about_section .title2 {
+    font-size: 16px;
+  }
+  footer .heading {
+    font-size: 18px;
+  }
+  .footer-links a {
+    font-size: 14px;
+  }
+  .repair-section .title2 {
+    font-size: 16px;
+  }
+  .brand-item {
+    padding: 5px;
+    height: 40px;
+  }
+  .brand-item img {
+    max-width: 45px;
+  }
+  .cta {
+    font-family: "kindsans-medium";
+  }
+}
