@@ -8,11 +8,52 @@ import { useNavigate } from "react-router-dom";
 import OrderItem from "../components/OrderItem.jsx";
 import TotalCost from "../components/TotalCost.jsx";
 import LabeledInput from "../components/LabeledInput.jsx";
+import { apiHelper } from "../services/index.js";
+import { toast } from "react-toastify";
 const Checkout = () => {
   const navigate = useNavigate();
   const btn2Route = "/checkout";
   const btn3Route = "/wishlist";
   const [activeCard, setActiveCard] = useState(null);
+  const [cartData, setCartData] = useState([])
+  const getCart = async () => {
+    const {response, error} = await apiHelper('GET', 'cart/view', {}, null)
+    if(response){
+      setCartData(response.data.response.data)
+    }else{
+      toast.error(error)
+    }
+  }
+
+  useEffect(()=>{
+    getCart()
+  },[])
+
+const handleIncrement = async (item) => {
+    const body = {
+      cart_id: item.id,
+      type:'increase'
+    }
+    const {response, error} = await apiHelper('POST', 'cart/update-quantity', {}, body)
+    if(response){
+      setCartData(response.data.response.data)
+    }else{
+      toast.error(error)
+    }
+  }
+
+  const handleDecrement = async (item) => {
+    const body = {
+      cart_id: item.id,
+      type:'decrease'
+    }
+    const {response, error} = await apiHelper('POST', 'cart/update-quantity', {}, body)
+    if(response){
+      setCartData(response.data.response.data)
+    }else{
+      toast.error(error)
+    }
+  }
 
   const cardImages = [
     images.card1,
@@ -34,17 +75,21 @@ const Checkout = () => {
               <Col lg={6} md={8} className="mb-3">
                 <div className="orderDetails">
                   <h2 className="heading">order details</h2>
+                  {
+                  (cartData.items)?.map((item) => (
                   <OrderItem
-                    image={images.repair1}
-                    title="Intel Core i9-14900K New Gaming Desktop Processor"
-                    price="449.00"
+                    key={item.product.id}
+                    image={item.product.image}
+                    title={item.product.title}
+                    price={item.product.price}
+                    showCloseButton={true}
+                    quantity={item.quantity}
+                    onIncrement={() => handleIncrement(item)}
+                    onDecrement={() => handleDecrement(item)}
+                    onRemove={() => console.log('sdf')}
                   />
-                  <OrderItem
-                    image={images.repair1}
-                    title="Intel Core i9-14900K New Gaming Desktop Processor"
-                    price="449.00"
-                  />
-                  <TotalCost />
+                ))}
+                  <TotalCost subtotal={cartData.subtotal?.toFixed(2)} shipping={cartData.shipping?.toFixed(2)} total={cartData.total?.toFixed(2)}/>
                 </div>
                 <div className="btn_sec d_flex mt-3">
                   <GlobalButton

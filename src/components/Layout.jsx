@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, Links, useLocation, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -18,6 +18,8 @@ import {
   incrementQuantity,
   removeFromCart,
 } from "../redux/slices/cartSlice.js";
+import { apiHelper } from "../services/index.js";
+import { toast } from "react-toastify";
 
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -26,6 +28,7 @@ const Layout = ({ children }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [repairOpen, setRepairOpen] = useState(false);
   const [pcBuildsOpen, setPcBuildsOpen] = useState(false);
+  const [cartData, setCartData] = useState([])
   const { totalQuantity, totalPrice, items } = useSelector(
     (state) => state.cart
   );
@@ -56,6 +59,47 @@ const Layout = ({ children }) => {
       : location.pathname.startsWith(path);
   };
   const navigate = useNavigate();
+
+  const getCart = async () => {
+    const {response, error} = await apiHelper('GET', 'cart/view', {}, null)
+    if(response){
+      console.log('cart', response.data.response.data)
+      setCartData(response.data.response.data)
+    }else{
+      toast.error(error)
+    }
+  }
+
+  const handleIncrement = async (item) => {
+    const body = {
+      cart_id: item.id,
+      type:'increase'
+    }
+    const {response, error} = await apiHelper('POST', 'cart/update-quantity', {}, body)
+    if(response){
+      setCartData(response.data.response.data)
+    }else{
+      toast.error(error)
+    }
+  }
+
+  const handleDecrement = async (item) => {
+    const body = {
+      cart_id: item.id,
+      type:'decrease'
+    }
+    const {response, error} = await apiHelper('POST', 'cart/update-quantity', {}, body)
+    if(response){
+      setCartData(response.data.response.data)
+    }else{
+      toast.error(error)
+    }
+  }
+
+  
+  useEffect(()=>{
+    getCart()
+  },[])
 
   return (
     <div className="layout-wrapper">
@@ -228,16 +272,16 @@ const Layout = ({ children }) => {
 
           <div className="cart-body">
             {/* Render your cart items here */}
-            {items.map((item) => (
+            {(cartData.items)?.map((item) => (
               <OrderItem
-                key={item.id}
-                image={item.image}
-                title={item.title}
-                price={item.price}
+                key={item.product.id}
+                image={item.product.image}
+                title={item.product.title}
+                price={item.product.price}
                 showCloseButton={true}
                 quantity={item.quantity}
-                onIncrement={() => dispatch(incrementQuantity(item.id))}
-                onDecrement={() => dispatch(decrementQuantity(item.id))}
+                onIncrement={() => handleIncrement(item)}
+                onDecrement={() => handleDecrement(item)}
                 onRemove={() => dispatch(removeFromCart(item.id))}
               />
             ))}
@@ -245,7 +289,7 @@ const Layout = ({ children }) => {
 
           <div className="cart-footer">
             <p>
-              <strong>Subtotal:</strong> ${totalPrice.toFixed(2)}
+              <strong>Subtotal:</strong> ${cartData.subtotal?.toFixed(2)}
             </p>
             <GlobalButton
               text="Proceed To Checkout"

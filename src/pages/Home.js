@@ -226,7 +226,7 @@ const Home = () => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (!token && !isLogin && !user) {
+      if (!token) {
         setModalOpen(true);
       }
     }, 5000);
@@ -246,8 +246,17 @@ const Home = () => {
     }
   };
 
-  const handleAddToCart = (product) => {
+  const handleAddToCart = async (product) => {
     dispatch(addToCart(product));
+    const body = {
+      product_id: product?.id
+    }
+    const {response, error} = await apiHelper("POST", 'cart/add', {}, body)
+    if(response){
+      console.log(response.data.data)
+    }else{
+      toast.error(error)
+    }
     // console.log('dssdfsdfs')
   };
 
