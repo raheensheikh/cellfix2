@@ -98,6 +98,11 @@ const images = {
   company12: require("./company12.png"),
   slide5: require("./banner5.png"),
   slide6: require("./whole-seller-banner.png"),
+  pcbuild1: require("./pcbuild1.png"),
+  pcbuild2: require("./pcbuild2.png"),
+  pcbuild3: require("./pcbuild3.png"),
+  pcbuild4: require("./pcbuild4.png"),
+  check: require("./tick-square.png"),
 };
 
 export default images;

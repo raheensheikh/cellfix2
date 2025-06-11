@@ -28,7 +28,7 @@ const Layout = ({ children }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [repairOpen, setRepairOpen] = useState(false);
   const [pcBuildsOpen, setPcBuildsOpen] = useState(false);
-  const [cartData, setCartData] = useState([])
+  const [cartData, setCartData] = useState([]);
   const { totalQuantity, totalPrice, items } = useSelector(
     (state) => state.cart
   );
@@ -61,45 +61,54 @@ const Layout = ({ children }) => {
   const navigate = useNavigate();
 
   const getCart = async () => {
-    const {response, error} = await apiHelper('GET', 'cart/view', {}, null)
-    if(response){
-      console.log('cart', response.data.response.data)
-      setCartData(response.data.response.data)
-    }else{
-      toast.error(error)
+    const { response, error } = await apiHelper("GET", "cart/view", {}, null);
+    if (response) {
+      console.log("cart", response.data.response.data);
+      setCartData(response.data.response.data);
+    } else {
+      toast.error(error);
     }
-  }
+  };
 
   const handleIncrement = async (item) => {
     const body = {
       cart_id: item.id,
-      type:'increase'
+      type: "increase",
+    };
+    const { response, error } = await apiHelper(
+      "POST",
+      "cart/update-quantity",
+      {},
+      body
+    );
+    if (response) {
+      setCartData(response.data.response.data);
+    } else {
+      toast.error(error);
     }
-    const {response, error} = await apiHelper('POST', 'cart/update-quantity', {}, body)
-    if(response){
-      setCartData(response.data.response.data)
-    }else{
-      toast.error(error)
-    }
-  }
+  };
 
   const handleDecrement = async (item) => {
     const body = {
       cart_id: item.id,
-      type:'decrease'
+      type: "decrease",
+    };
+    const { response, error } = await apiHelper(
+      "POST",
+      "cart/update-quantity",
+      {},
+      body
+    );
+    if (response) {
+      setCartData(response.data.response.data);
+    } else {
+      toast.error(error);
     }
-    const {response, error} = await apiHelper('POST', 'cart/update-quantity', {}, body)
-    if(response){
-      setCartData(response.data.response.data)
-    }else{
-      toast.error(error)
-    }
-  }
+  };
 
-  
-  useEffect(()=>{
-    getCart()
-  },[])
+  useEffect(() => {
+    getCart();
+  }, []);
 
   return (
     <div className="layout-wrapper">
@@ -272,7 +281,7 @@ const Layout = ({ children }) => {
 
           <div className="cart-body">
             {/* Render your cart items here */}
-            {(cartData.items)?.map((item) => (
+            {cartData.items?.map((item) => (
               <OrderItem
                 key={item.product.id}
                 image={item.product.image}
@@ -319,27 +328,40 @@ const Layout = ({ children }) => {
                 />
                 <div className="border-bottom m-5"></div>
                 <div className="social-icons">
-                  <Link to="/">
+                  <a
+                    href="https://www.facebook.com/share/1HQ3yK1Wuh/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <Image
                       src={images.facebook}
                       alt="Facebook"
                       className="icon"
                     />
-                  </Link>
-                  <Link to="/">
+                  </a>
+                  <a
+                    href="https://www.instagram.com/_cellnet_?igsh=b2Zma2NwdHBlZzZz"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <Image
                       src={images.instagram}
-                      alt="instagram"
+                      alt="Instagram"
                       className="icon"
                     />
-                  </Link>
-                  <Link to="/">
+                  </a>
+
+                  <a
+                    href="https://wa.me/13467337447"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <Image
                       src={images.whatsapp}
-                      alt="whatsapp"
+                      alt="Whatsapp"
                       className="icon"
                     />
-                  </Link>
+                  </a>
                 </div>
               </div>
             </Col>

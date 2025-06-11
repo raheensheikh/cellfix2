@@ -49,7 +49,7 @@ const NearestStore = () => {
       ) {
         const store = response.data.response.data;
         setLocation([store]);
-        const newMapUrl = `https://www.google.com/maps/embed/v1/place?key=YOUR_API_KEY&q=${store.latitude},${store.longitude}`;
+        const newMapUrl = `https://www.google.com/maps/embed/v1/place?key=AIzaSyA9-EXAMPLE-KEY-123456&q=${store.latitude},${store.longitude}`;
         setMapUrl(newMapUrl);
       } else {
         toast.error(error || "Failed to fetch nearest store");
@@ -109,7 +109,7 @@ const NearestStore = () => {
           <Container>
             <div className="locationBg">
               <Row>
-                <Col lg={7} md={7} className="mb-3">
+                <Col lg={12} md={12} className="mb-3">
                   <h2 className="heading">
                     Locate <span className="redText">Our Store</span> nearest to
                     you
@@ -142,7 +142,7 @@ const NearestStore = () => {
                     onClick={() => setModalContact(true)}
                   />
                 </Col>
-                <Col lg={5} md={5} className="mb-3">
+                {/* <Col lg={5} md={5} className="mb-3">
                   <div className="map">
                     <iframe
                       src={mapUrl}
@@ -160,7 +160,7 @@ const NearestStore = () => {
                       color="#fff"
                     />
                   </div>
-                </Col>
+                </Col> */}
               </Row>
             </div>
           </Container>

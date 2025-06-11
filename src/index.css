@@ -1305,7 +1305,9 @@ p {
 .contactNumbers p {
   margin-bottom: 8px;
 }
-
+.Toastify{
+  margin: 0 !important;
+}
 .contactNumbers .number {
   text-decoration: underline;
   color: #e11219;
