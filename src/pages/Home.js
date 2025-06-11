@@ -60,6 +60,8 @@ const Home = () => {
   const [loading, setLoading] = useState(false);
   const [location, setLocation] = useState([]);
   const [isModalContact, setModalContact] = useState(false);
+  const [selectedStoreId, setSelectedStoreId] = useState(null);
+  const [isStoreModal, setStoreModal] = useState(false); // Per-store modal
 
   const { token, user, isLogin } = useSelector((state) => state.user);
   const [repairCategories, setRepairCategories] = useState([]);
@@ -70,7 +72,28 @@ const Home = () => {
     images.repair4,
     images.repair5,
   ];
-
+  const storeContactInfo = {
+    1: {
+      name: "CellNet",
+      address: "Beechnut st Houston tx 77072",
+      phone: "2814987243",
+    },
+    2: {
+      name: "Xpert Wireless",
+      address: "3818 Linkvalley dr Houston tx 77025",
+      phone: "8328209900",
+    },
+    3: {
+      name: "Xpert 4G Wireless",
+      address: "6610 Antoine dr Houston tx 77091",
+      phone: "7136823333",
+    },
+    4: {
+      name: "Xpert Wireless",
+      address: "5823 w Gulfbank rd Houston tx 77088",
+      phone: "2812720082",
+    },
+  };
   const OnSubmit = async (e) => {
     e.preventDefault();
 
@@ -249,13 +272,13 @@ const Home = () => {
   const handleAddToCart = async (product) => {
     dispatch(addToCart(product));
     const body = {
-      product_id: product?.id
-    }
-    const {response, error} = await apiHelper("POST", 'cart/add', {}, body)
-    if(response){
-      console.log(response.data.data)
-    }else{
-      toast.error(error)
+      product_id: product?.id,
+    };
+    const { response, error } = await apiHelper("POST", "cart/add", {}, body);
+    if (response) {
+      console.log(response.data.data);
+    } else {
+      toast.error(error);
     }
     // console.log('dssdfsdfs')
   };
@@ -896,7 +919,10 @@ const Home = () => {
                     name={store.name}
                     address={`${store.address} Houston TX ${store.zipcode}`}
                     onMapClick={() => handleMapClick(store.google_maps_link)}
-                    onCallClick={() => setModalContact(true)}
+                    onCallClick={() => {
+                      setSelectedStoreId(store.id);
+                      setStoreModal(true);
+                    }}
                   />
                 ))
               ) : loading ? (
@@ -1160,6 +1186,34 @@ const Home = () => {
             <p className="para">5823 w Gulfbank rd Houston tx 77088</p>
             <p className="number">2812720082</p>
           </div>
+        </Modal>
+        <Modal
+          isOpen={isStoreModal}
+          onClose={() => {
+            setStoreModal(false);
+            setSelectedStoreId(null);
+          }}
+          showHeader={true}
+          heading="Store Contact"
+        >
+          {selectedStoreId && storeContactInfo[selectedStoreId] ? (
+            <div className="contactNumbers">
+              <p className="title">{storeContactInfo[selectedStoreId].name}</p>
+              <p className="para">
+                {storeContactInfo[selectedStoreId].address}
+              </p>
+              <p
+                className="number"
+                onClick={() =>
+                  handleCallClick(storeContactInfo[selectedStoreId].phone)
+                }
+              >
+                {storeContactInfo[selectedStoreId].phone}
+              </p>
+            </div>
+          ) : (
+            <p>No contact info available for this store.</p>
+          )}
         </Modal>
       </Layout>
       <OverlayLoader visible={loading} />

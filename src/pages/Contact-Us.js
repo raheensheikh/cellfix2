@@ -1,8 +1,7 @@
 import Layout from "../components/Layout.jsx";
-import { Link } from "react-router-dom";
 import { Col, Container, Image, Row } from "react-bootstrap";
 import images from "../assets/images/index.js";
-import React, { useRef, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import GlobalButton from "../components/GlobalButton.jsx";
 import Locations from "../components/Locations.jsx";
 import Modal from "../components/Modal.jsx";
@@ -11,9 +10,10 @@ import { apiHelper } from "../services/index.js";
 import { toast } from "react-toastify";
 
 const ContactUs = () => {
-  const [isModalContact, setModalContact] = useState(false);
+  const [isModalContact, setModalContact] = useState(false); // Global modal
+  const [isStoreModal, setStoreModal] = useState(false); // Per-store modal
+  const [selectedStoreId, setSelectedStoreId] = useState(null);
   const [location, setLocation] = useState([]);
-
   const [loading, setLoading] = useState(false);
 
   const handleMapClick = (link) => {
@@ -28,6 +28,29 @@ const ContactUs = () => {
     }
   };
 
+  const storeContactInfo = {
+    1: {
+      name: "CellNet",
+      address: "Beechnut st Houston tx 77072",
+      phone: "2814987243",
+    },
+    2: {
+      name: "Xpert Wireless",
+      address: "3818 Linkvalley dr Houston tx 77025",
+      phone: "8328209900",
+    },
+    3: {
+      name: "Xpert 4G Wireless",
+      address: "6610 Antoine dr Houston tx 77091",
+      phone: "7136823333",
+    },
+    4: {
+      name: "Xpert Wireless",
+      address: "5823 w Gulfbank rd Houston tx 77088",
+      phone: "2812720082",
+    },
+  };
+
   const locations = async () => {
     setLoading(true);
     try {
@@ -38,7 +61,6 @@ const ContactUs = () => {
         null
       );
       if (response) {
-        console.log(response.data.response); // For debugging
         setLocation(response.data.response.data);
       } else {
         toast.error(error || "Failed to fetch store locations");
@@ -56,6 +78,7 @@ const ContactUs = () => {
   }, []);
 
   const storeImages = [images.map1, images.map2, images.map3, images.map4];
+
   return (
     <div>
       <Layout>
@@ -87,6 +110,7 @@ const ContactUs = () => {
             </div>
           </Container>
         </section>
+
         <section className="locationSection m-3">
           <Container>
             <h1 className="heading text-start">Find our stores in houston</h1>
@@ -99,7 +123,10 @@ const ContactUs = () => {
                     name={store.name}
                     address={`${store.address} Houston TX ${store.zipcode}`}
                     onMapClick={() => handleMapClick(store.google_maps_link)}
-                    onCallClick={() => setModalContact(true)} 
+                    onCallClick={() => {
+                      setSelectedStoreId(store.id);
+                      setStoreModal(true);
+                    }}
                   />
                 ))
               ) : loading ? (
@@ -110,6 +137,8 @@ const ContactUs = () => {
             </div>
           </Container>
         </section>
+
+        {/* Global contact modal */}
         <Modal
           isOpen={isModalContact}
           onClose={() => setModalContact(false)}
@@ -117,7 +146,7 @@ const ContactUs = () => {
           heading="Contact Us"
         >
           <div className="contactNumbers">
-            <p className="title">CellFix</p>
+            <p className="title">CellNet</p>
             <p className="para">Beechnut st Houston tx 77072</p>
             <p className="number">2814987243</p>
           </div>
@@ -136,6 +165,36 @@ const ContactUs = () => {
             <p className="para">5823 w Gulfbank rd Houston tx 77088</p>
             <p className="number">2812720082</p>
           </div>
+        </Modal>
+
+        {/* Per-store modal */}
+        <Modal
+          isOpen={isStoreModal}
+          onClose={() => {
+            setStoreModal(false);
+            setSelectedStoreId(null);
+          }}
+          showHeader={true}
+          heading="Store Contact"
+        >
+          {selectedStoreId && storeContactInfo[selectedStoreId] ? (
+            <div className="contactNumbers">
+              <p className="title">{storeContactInfo[selectedStoreId].name}</p>
+              <p className="para">
+                {storeContactInfo[selectedStoreId].address}
+              </p>
+              <p
+                className="number"
+                onClick={() =>
+                  handleCallClick(storeContactInfo[selectedStoreId].phone)
+                }
+              >
+                {storeContactInfo[selectedStoreId].phone}
+              </p>
+            </div>
+          ) : (
+            <p>No contact info available for this store.</p>
+          )}
         </Modal>
       </Layout>
     </div>
