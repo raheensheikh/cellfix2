@@ -12,11 +12,12 @@ const Pc = ({
   btn2Route = "",
   btn3Route = "",
   price,
+  onClick,
 }) => {
   const navigate = useNavigate();
 
   return (
-    <div className="buildPc">
+    <div className="buildPc" onClick={onClick}>
       {image && <Image src={image} />}
       {title && <p className="title2">{title}</p>}
 
@@ -31,7 +32,10 @@ const Pc = ({
         <GlobalButton
           text={btn2Text}
           border="none"
-          onClick={() => navigate(btn2Route)}
+          onClick={(e) => {
+            e.stopPropagation();
+            navigate(btn2Route);
+          }}
         />
        <p className="prices">{price}</p>
       </div>

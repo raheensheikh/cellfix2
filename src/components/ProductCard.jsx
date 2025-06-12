@@ -19,12 +19,16 @@ const ProductCard = ({
   btn3Route = "/",
   btn1Click,
   btn2Click,
-  btn3Click
+  btn3Click,
+  onClick,
 }) => {
   const navigate = useNavigate();
 
   return (
-    <div className={`productCard ${showBorder ? "withBorder" : ""}`}>
+    <div
+      className={`productCard ${showBorder ? "withBorder" : ""}`}
+      onClick={onClick}
+    >
       <div className="productCard_img">
         <Image src={image} alt="Product" className="productCard_image" />
       </div>
@@ -38,8 +42,10 @@ const ProductCard = ({
               text={btn3Text}
               color="#000"
               textColor="#fff"
-              // onClick={() => navigate(btn1Route)}
-              onClick={btn3Click}
+              onClick={(e) => {
+                e.stopPropagation();
+                btn3Click?.();
+              }}
             />
           </div>
         )}
@@ -51,14 +57,18 @@ const ProductCard = ({
               color="#fff"
               textColor="#000"
               border="1px solid #000"
-              // onClick={() => navigate(btn2Route)}
-              onClick={btn1Click}
+              onClick={(e) => {
+                e.stopPropagation(); // 🔒 prevent outer onClick
+                btn1Click?.();
+              }}
             />
             <GlobalButton
               text={btn2Text}
               border="none"
-              // onClick={() => navigate(btn3Route)}
-              onClick={btn2Click}
+              onClick={(e) => {
+                e.stopPropagation();
+                btn2Click?.();
+              }}
             />
           </div>
         )}

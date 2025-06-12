@@ -85,43 +85,6 @@ const Checkout = () => {
           <Container>
             <Row>
               <Col lg={6} md={8} className="mb-3">
-                <div className="orderDetails">
-                  <h2 className="heading">order details</h2>
-                  {cartData.items?.map((item) => (
-                    <OrderItem
-                      key={item.product.id}
-                      image={item.product.image}
-                      title={item.product.title}
-                      price={item.product.price}
-                      showCloseButton={true}
-                      quantity={item.quantity}
-                      onIncrement={() => handleIncrement(item)}
-                      onDecrement={() => handleDecrement(item)}
-                      onRemove={() => console.log("sdf")}
-                    />
-                  ))}
-                  <TotalCost
-                    subtotal={cartData.subtotal?.toFixed(2)}
-                    shipping={cartData.shipping?.toFixed(2)}
-                    total={cartData.total?.toFixed(2)}
-                  />
-                </div>
-                <div className="btn_sec d_flex mt-3">
-                  <GlobalButton
-                    text="Complete Purchase"
-                    border="none"
-                    onClick={() => setModalSuccess(true)}
-                  />
-                  <GlobalButton
-                    text="Cancel"
-                    color="#fff"
-                    textColor="#000"
-                    border="1px solid #000"
-                    onClick={() => navigate(btn2Route)}
-                  />
-                </div>
-              </Col>
-              <Col lg={6} md={8} className="mb-3">
                 <h2 className="heading">Complete your order</h2>
                 <p className="redText ">Personal Details</p>
                 <Row>
@@ -237,6 +200,43 @@ const Checkout = () => {
                     onClick={() => navigate(btn3Route)}
                   /> */}
                 </Row>
+              </Col>
+              <Col lg={6} md={8} className="mb-3">
+                <div className="orderDetails">
+                  <h2 className="heading">order details</h2>
+                  {cartData.items?.map((item) => (
+                    <OrderItem
+                      key={item.product.id}
+                      image={item.product.image}
+                      title={item.product.title}
+                      price={item.product.price}
+                      showCloseButton={true}
+                      quantity={item.quantity}
+                      onIncrement={() => handleIncrement(item)}
+                      onDecrement={() => handleDecrement(item)}
+                      onRemove={() => console.log("sdf")}
+                    />
+                  ))}
+                  <TotalCost
+                    subtotal={cartData.subtotal?.toFixed(2)}
+                    shipping={cartData.shipping?.toFixed(2)}
+                    total={cartData.total?.toFixed(2)}
+                  />
+                </div>
+                <div className="btn_sec d_flex mt-3">
+                  <GlobalButton
+                    text="Complete Purchase"
+                    border="none"
+                    onClick={() => setModalSuccess(true)}
+                  />
+                  <GlobalButton
+                    text="Cancel"
+                    color="#fff"
+                    textColor="#000"
+                    border="1px solid #000"
+                    onClick={() => navigate(btn2Route)}
+                  />
+                </div>
               </Col>
             </Row>
           </Container>

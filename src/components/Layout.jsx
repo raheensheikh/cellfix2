@@ -5,6 +5,7 @@ import {
   faBell,
   faChevronDown,
   faBars,
+  faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { Col, Container, Form, Image, Row } from "react-bootstrap";
 import images from "../assets/images/index.js";
@@ -476,7 +477,7 @@ const Layout = ({
               className="profile-button"
               onClick={() => setShowProfileDropdown(!showProfileDropdown)}
             >
-              <Image src={images.profileIcon} alt="profile" />
+              <FontAwesomeIcon icon={faUser} size="lg" />
             </button>
 
             {showProfileDropdown && (
@@ -486,6 +487,7 @@ const Layout = ({
               </div>
             )}
           </div>
+
           <button className="cart_option" onClick={() => setShowCart(true)}>
             <Image src={images.cart} alt="cart_option" />
             <div className="cart_amount">

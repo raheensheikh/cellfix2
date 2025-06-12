@@ -61,7 +61,7 @@ const Home = () => {
   const [location, setLocation] = useState([]);
   const [isModalContact, setModalContact] = useState(false);
   const [selectedStoreId, setSelectedStoreId] = useState(null);
-  const [isStoreModal, setStoreModal] = useState(false); // Per-store modal
+  const [isStoreModal, setStoreModal] = useState(false); 
 
   const { token, user, isLogin } = useSelector((state) => state.user);
   const [repairCategories, setRepairCategories] = useState([]);
@@ -201,7 +201,7 @@ const Home = () => {
   };
 
   const verifyOtpChange = (e, index) => {
-    const value = e.target.value.replace(/\D/, ""); // allow digits only
+    const value = e.target.value.replace(/\D/, ""); 
     if (!value) return;
 
     const updatedOtp = [...otp];
@@ -280,7 +280,6 @@ const Home = () => {
     } else {
       toast.error(error);
     }
-    // console.log('dssdfsdfs')
   };
 
   const getPhoneParts = async () => {
@@ -449,7 +448,25 @@ const Home = () => {
       setLoading(false);
     }
   };
+  const whatRepair = async () => {
+    setLoading(true);
+    const { response, error } = await apiHelper(
+      "GET",
+      "repair/categories",
+      {},
+      null
+    );
+    if (response) {
+      setRepairCategories(response.data.response.data);
+    } else {
+      toast.error(error);
+    }
+    setLoading(false);
+  };
 
+  useEffect(() => {
+    whatRepair();
+  }, []);
   const storeImages = [images.map1, images.map2, images.map3, images.map4];
   return (
     <div>
@@ -545,74 +562,19 @@ const Home = () => {
         <section className="homeSection3">
           <Container>
             <h1 className="heading">What We Repair?</h1>
-            {/* <Row>
-              <Col lg={3} md={4} sm={6} xs={6}>
-                <ProductCard
-                  image={images.repair1}
-                  showTitle={false}
-                  btn3Text="Repair Now"
-                  showBtnSec2={true}
-                  showBtnSec={false}
-                  showBorder={true}
-                  btn1Route="/repair"
-                />
-              </Col>
-              <Col lg={3} md={4} sm={6} xs={6}>
-                <ProductCard
-                  image={images.repair2}
-                  showTitle={false}
-                  btn3Text="Repair Now"
-                  showBtnSec2={true}
-                  showBtnSec={false}
-                  showBorder={true}
-                  btn1Route="/repair"
-                />
-              </Col>
-              <Col lg={3} md={4} sm={6} xs={6}>
-                <ProductCard
-                  image={images.repair3}
-                  showTitle={false}
-                  btn3Text="Repair Now"
-                  showBtnSec2={true}
-                  showBtnSec={false}
-                  showBorder={true}
-                  btn1Route="/repair"
-                />
-              </Col>
-              <Col lg={3} md={4} sm={6} xs={6}>
-                <ProductCard
-                  image={images.repair4}
-                  showTitle={false}
-                  btn3Text="Repair Now"
-                  showBtnSec2={true}
-                  showBtnSec={false}
-                  showBorder={true}
-                  btn1Route="/repair"
-                />
-              </Col>
-              <Col lg={3} md={4} sm={6} xs={6}>
-                <ProductCard
-                  image={images.repair5}
-                  showTitle={false}
-                  btn3Text="Repair Now"
-                  showBtnSec2={true}
-                  showBtnSec={false}
-                  showBorder={true}
-                  btn1Route="/repair"
-                />
-              </Col>
-            </Row> */}
+
             <Row>
               {repairCategories.map((item, index) => (
                 <Col key={item.id} lg={3} md={4} sm={6} xs={6}>
                   <ProductCard
-                    image={repairImages[index % repairImages.length]} // Cycle through dummy images
-                    showTitle={false}
+                    image={repairImages[index % repairImages.length]} 
+                    showTitle={true}
+                    title={item.name} 
                     btn3Text="Repair Now"
                     showBtnSec2={true}
                     showBtnSec={false}
                     showBorder={true}
-                    btn3Click={() => navigate("/repair")}
+                    btn3Click={() => navigate(`/repair/${item.id}`)} 
                   />
                 </Col>
               ))}
@@ -638,24 +600,14 @@ const Home = () => {
                       showBorder={false}
                       btn2Click={() => handleAddToCart(item)}
                       btn1Click={() => navigate("/checkout")}
+                      onClick={() => navigate(`/details/${item.id}`)}
                     />
                   </Col>
                 ))
               ) : (
                 <p>No phone parts available</p>
               )}
-              {/* <Col lg={3} md={4} sm={6} xs={6}>
-                <ProductCard
-                  image={images.parts2}
-                  showTitle={true}
-                  title="iPhone 16 Pro Max Charging Port Flex Desert Titanium"
-                  btn1Text="Buy Now"
-                  btn2Text="Add to Cart"
-                  showBtnSec2={false}
-                  showBtnSec={true}
-                  showBorder={false}
-                />
-              </Col> */}
+
             </Row>
 
             {phoneParts.length > 0 && (
@@ -690,6 +642,7 @@ const Home = () => {
                       showBorder={false}
                       btn2Click={() => handleAddToCart(item)}
                       btn1Click={() => navigate("/checkout")}
+                      onClick={() => navigate(`/details/${item.id}`)}
                     />
                   </Col>
                 ))
@@ -705,6 +658,7 @@ const Home = () => {
                   color="#fff"
                   textColor="#000"
                   border="1px solid #000"
+                  onClick={() => navigate("/shop-phones")}
                 />
               </div>
             )}
@@ -729,6 +683,7 @@ const Home = () => {
                       showBorder={false}
                       btn2Click={() => handleAddToCart(item)}
                       btn1Click={() => navigate("/checkout")}
+                      onClick={() => navigate(`/details/${item.id}`)}
                     />
                   </Col>
                 ))
@@ -744,6 +699,7 @@ const Home = () => {
                   color="#fff"
                   textColor="#000"
                   border="1px solid #000"
+                  onClick={() => navigate("/shop-watches")}
                 />
               </div>
             )}
@@ -768,6 +724,7 @@ const Home = () => {
                       showBorder={false}
                       btn2Click={() => handleAddToCart(item)}
                       btn1Click={() => navigate("/checkout")}
+                      onClick={() => navigate(`/details/${item.id}`)}
                     />
                   </Col>
                 ))
@@ -783,6 +740,7 @@ const Home = () => {
                   color="#fff"
                   textColor="#000"
                   border="1px solid #000"
+                  onClick={() => navigate("/shop-laptops")}
                 />
               </div>
             )}
@@ -807,6 +765,7 @@ const Home = () => {
                       showBorder={false}
                       btn2Click={() => handleAddToCart(item)}
                       btn1Click={() => navigate("/checkout")}
+                      onClick={() => navigate(`/details/${item.id}`)}
                     />
                   </Col>
                 ))
@@ -822,6 +781,7 @@ const Home = () => {
                   color="#fff"
                   textColor="#000"
                   border="1px solid #000"
+                  onClick={() => navigate("/shop-ipads")}
                 />
               </div>
             )}
@@ -846,6 +806,7 @@ const Home = () => {
                       showBorder={false}
                       btn2Click={() => handleAddToCart(item)}
                       btn1Click={() => navigate("/checkout")}
+                      onClick={() => navigate(`/details/${item.id}`)}
                     />
                   </Col>
                 ))
@@ -860,6 +821,7 @@ const Home = () => {
                   color="#fff"
                   textColor="#000"
                   border="1px solid #000"
+                  onClick={() => navigate("/shop-consoles")}
                 />
               </div>
             )}
@@ -973,7 +935,7 @@ const Home = () => {
               </div>
               <GlobalButton text="Login" onClick={OnSubmit} />
               <div className="signupText text-center">
-                Don't have an account?{" "}
+                Don't have an account?
                 <Link
                   to="/signup"
                   onClick={(e) => {

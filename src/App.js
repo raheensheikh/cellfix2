@@ -28,7 +28,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/repair" element={<Repair />} />
+          <Route path="/repair/:id" element={<Repair />} />
           <Route path="/online-repair" element={<OnlineRepair />} />
           <Route path="/contact-us" element={<ContactUs />} />
           <Route path="/nearest-store" element={<NearestStore />} />
@@ -40,14 +40,13 @@ function App() {
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/terms-and-conditions" element={<TermsCondition />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-          <Route path="/details" element={<Details />} />
+          <Route path="/details/:id" element={<Details />} />
           <Route path="/phone-parts" element={<PhoneParts />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/customize-pcs" element={<CustomizePcs />} />
           <Route path="/prebuild-pcs" element={<PrebuildPcs />} />
           <Route path="/services" element={<Services />} />
           <Route path="/profile" element={<Profile />} />
-
         </Routes>
       </Router>
     </>

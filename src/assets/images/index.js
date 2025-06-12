@@ -52,7 +52,7 @@ const images = {
   repairImage5: require("./Property 1=Variant5.png"),
   samsung: require("./samsung.png"),
   apple: require("./apple.png"),
-  google: require("./Google Pixel.png"),
+  google: require("./Google-pixel.png"),
   motorola: require("./Motorola.png"),
   oneplus: require("./Oneplus.png"),
   issueImg1: require("./Group 1 (1).png"),

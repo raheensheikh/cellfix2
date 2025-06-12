@@ -147,7 +147,7 @@ img {
 .header-right {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 15px;
 }
 .cart_option {
   position: relative;
@@ -1365,4 +1365,7 @@ p {
 
 .successModal .heading {
   font-size: 32px;
+}
+.buildPc .title2{
+  text-transform: capitalize;
 }
