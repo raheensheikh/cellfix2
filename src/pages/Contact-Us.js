@@ -121,7 +121,7 @@ const ContactUs = () => {
                     key={store.id}
                     image={storeImages[index % storeImages.length]}
                     name={store.name}
-                    address={`${store.address} Houston TX ${store.zipcode}`}
+                    address={`${store.address} ${store.zipcode}`}
                     onMapClick={() => handleMapClick(store.google_maps_link)}
                     onCallClick={() => {
                       setSelectedStoreId(store.id);

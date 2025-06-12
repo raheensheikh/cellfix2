@@ -849,8 +849,16 @@ const Layout = ({
                 <div className="footer-links">
                   <h2 className="heading">Contact information</h2>
                   <Link to="/">346-733-7447</Link>
-                  <Link to="/">cellfix4uteam@gmail.com</Link>
-                  <Link to="/">Operational Hours: 10 AM to 8 PM</Link>
+                  <Link
+                    to="/"
+                    onClick={() => {
+                      window.location.href =
+                        "mailto:Cellfix4uteam@gmail.com?subject=Support%20Request&body=Hello%20Cellfix4u%20Team%2C%0AI%20need%20help%20with...";
+                    }}
+                  >
+                    cellfix4uteam@gmail.com
+                  </Link>
+                  <Link to="">Operational Hours: 10 AM to 8 PM</Link>
                 </div>
                 <div className="footer-links">
                   <h2 className="heading">Links</h2>

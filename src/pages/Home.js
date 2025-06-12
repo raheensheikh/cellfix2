@@ -61,7 +61,7 @@ const Home = () => {
   const [location, setLocation] = useState([]);
   const [isModalContact, setModalContact] = useState(false);
   const [selectedStoreId, setSelectedStoreId] = useState(null);
-  const [isStoreModal, setStoreModal] = useState(false); 
+  const [isStoreModal, setStoreModal] = useState(false);
 
   const { token, user, isLogin } = useSelector((state) => state.user);
   const [repairCategories, setRepairCategories] = useState([]);
@@ -201,7 +201,7 @@ const Home = () => {
   };
 
   const verifyOtpChange = (e, index) => {
-    const value = e.target.value.replace(/\D/, ""); 
+    const value = e.target.value.replace(/\D/, "");
     if (!value) return;
 
     const updatedOtp = [...otp];
@@ -567,14 +567,14 @@ const Home = () => {
               {repairCategories.map((item, index) => (
                 <Col key={item.id} lg={3} md={4} sm={6} xs={6}>
                   <ProductCard
-                    image={repairImages[index % repairImages.length]} 
+                    image={repairImages[index % repairImages.length]}
                     showTitle={true}
-                    title={item.name} 
+                    title={item.name}
                     btn3Text="Repair Now"
                     showBtnSec2={true}
                     showBtnSec={false}
                     showBorder={true}
-                    btn3Click={() => navigate(`/repair/${item.id}`)} 
+                    btn3Click={() => navigate(`/repair/${item.id}`)}
                   />
                 </Col>
               ))}
@@ -607,7 +607,6 @@ const Home = () => {
               ) : (
                 <p>No phone parts available</p>
               )}
-
             </Row>
 
             {phoneParts.length > 0 && (
@@ -838,6 +837,7 @@ const Home = () => {
           the inconvenience of a broken device, we prioritize quick fixes to get you back up and running as soon as possible."
             buttonText="Start a Repair"
             reverseRow={false}
+            showBtn={false}
             btnClick={() => navigate("/repair")}
           />
         </section>
@@ -852,6 +852,7 @@ const Home = () => {
               needs."
             buttonText="Start iphone repair"
             reverseRow={true}
+            showBtn={false}
             btnClick={() => navigate("/repair")}
           />
         </section>
@@ -866,7 +867,7 @@ const Home = () => {
               techniques, all while delivering fast, dependable service"
             buttonText="Start Samsung repair"
             reverseRow={false}
-            btnClick={() => navigate("/repair")}
+            showBtn={false}
           />
         </section>
         <section className="locationSection m-3">
@@ -879,7 +880,7 @@ const Home = () => {
                     key={store.id}
                     image={storeImages[index % storeImages.length]}
                     name={store.name}
-                    address={`${store.address} Houston TX ${store.zipcode}`}
+                    address={`${store.address} ${store.zipcode}`}
                     onMapClick={() => handleMapClick(store.google_maps_link)}
                     onCallClick={() => {
                       setSelectedStoreId(store.id);
