@@ -353,9 +353,8 @@ const Repair = () => {
           description="With our extensive expertise, we deliver high-quality repairs 
           with impressive speed. Many issues can be fixed on the same day, often while you wait. Understanding 
           the inconvenience of a broken device, we prioritize quick fixes to get you back up and running as soon as possible."
-          buttonText="Start a Repair"
+          showBtn={false}
           reverseRow={false}
-          btnClick={() => navigate("/repair")}
         />
       </section>
       <section className="services m-3">
@@ -367,9 +366,8 @@ const Repair = () => {
               is repaired with precision and safety. Ask our store associates 
               about the availability of authentic Apple parts for your repair 
               needs."
-          buttonText="Start iphone repair"
+          showBtn={false}
           reverseRow={true}
-          btnClick={() => navigate("/repair")}
         />
       </section>
       <section className="services m-3">
@@ -381,9 +379,8 @@ const Repair = () => {
               repairs. Our certified technicians are committed to restoring 
               your device with OEM parts, advanced tools, and proven 
               techniques, all while delivering fast, dependable service"
-          buttonText="Start Samsung repair"
+          showBtn={true}
           reverseRow={false}
-          btnClick={() => navigate("/repair")}
         />
       </section>
 
