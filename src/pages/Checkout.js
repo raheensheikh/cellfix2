@@ -10,50 +10,62 @@ import TotalCost from "../components/TotalCost.jsx";
 import LabeledInput from "../components/LabeledInput.jsx";
 import { apiHelper } from "../services/index.js";
 import { toast } from "react-toastify";
+import Modal from "../components/Modal.jsx";
 const Checkout = () => {
   const navigate = useNavigate();
   const btn2Route = "/checkout";
   const btn3Route = "/wishlist";
   const [activeCard, setActiveCard] = useState(null);
-  const [cartData, setCartData] = useState([])
+  const [cartData, setCartData] = useState([]);
+  const [isModalSuccess, setModalSuccess] = useState(false);
   const getCart = async () => {
-    const {response, error} = await apiHelper('GET', 'cart/view', {}, null)
-    if(response){
-      setCartData(response.data.response.data)
-    }else{
-      toast.error(error)
+    const { response, error } = await apiHelper("GET", "cart/view", {}, null);
+    if (response) {
+      setCartData(response.data.response.data);
+    } else {
+      toast.error(error);
     }
-  }
+  };
 
-  useEffect(()=>{
-    getCart()
-  },[])
+  useEffect(() => {
+    getCart();
+  }, []);
 
-const handleIncrement = async (item) => {
+  const handleIncrement = async (item) => {
     const body = {
       cart_id: item.id,
-      type:'increase'
+      type: "increase",
+    };
+    const { response, error } = await apiHelper(
+      "POST",
+      "cart/update-quantity",
+      {},
+      body
+    );
+    if (response) {
+      setCartData(response.data.response.data);
+    } else {
+      toast.error(error);
     }
-    const {response, error} = await apiHelper('POST', 'cart/update-quantity', {}, body)
-    if(response){
-      setCartData(response.data.response.data)
-    }else{
-      toast.error(error)
-    }
-  }
+  };
 
   const handleDecrement = async (item) => {
     const body = {
       cart_id: item.id,
-      type:'decrease'
+      type: "decrease",
+    };
+    const { response, error } = await apiHelper(
+      "POST",
+      "cart/update-quantity",
+      {},
+      body
+    );
+    if (response) {
+      setCartData(response.data.response.data);
+    } else {
+      toast.error(error);
     }
-    const {response, error} = await apiHelper('POST', 'cart/update-quantity', {}, body)
-    if(response){
-      setCartData(response.data.response.data)
-    }else{
-      toast.error(error)
-    }
-  }
+  };
 
   const cardImages = [
     images.card1,
@@ -75,27 +87,30 @@ const handleIncrement = async (item) => {
               <Col lg={6} md={8} className="mb-3">
                 <div className="orderDetails">
                   <h2 className="heading">order details</h2>
-                  {
-                  (cartData.items)?.map((item) => (
-                  <OrderItem
-                    key={item.product.id}
-                    image={item.product.image}
-                    title={item.product.title}
-                    price={item.product.price}
-                    showCloseButton={true}
-                    quantity={item.quantity}
-                    onIncrement={() => handleIncrement(item)}
-                    onDecrement={() => handleDecrement(item)}
-                    onRemove={() => console.log('sdf')}
+                  {cartData.items?.map((item) => (
+                    <OrderItem
+                      key={item.product.id}
+                      image={item.product.image}
+                      title={item.product.title}
+                      price={item.product.price}
+                      showCloseButton={true}
+                      quantity={item.quantity}
+                      onIncrement={() => handleIncrement(item)}
+                      onDecrement={() => handleDecrement(item)}
+                      onRemove={() => console.log("sdf")}
+                    />
+                  ))}
+                  <TotalCost
+                    subtotal={cartData.subtotal?.toFixed(2)}
+                    shipping={cartData.shipping?.toFixed(2)}
+                    total={cartData.total?.toFixed(2)}
                   />
-                ))}
-                  <TotalCost subtotal={cartData.subtotal?.toFixed(2)} shipping={cartData.shipping?.toFixed(2)} total={cartData.total?.toFixed(2)}/>
                 </div>
                 <div className="btn_sec d_flex mt-3">
                   <GlobalButton
                     text="Complete Purchase"
                     border="none"
-                    onClick={() => navigate(btn3Route)}
+                    onClick={() => setModalSuccess(true)}
                   />
                   <GlobalButton
                     text="Cancel"
@@ -159,7 +174,7 @@ const handleIncrement = async (item) => {
                       className="inputfield"
                     />
                   </Col>
-                  <Col lg={6} md={6} >
+                  <Col lg={6} md={6}>
                     <LabeledInput
                       label="Card Number"
                       placeholder="Enter Card Number"
@@ -216,16 +231,37 @@ const handleIncrement = async (item) => {
                       className="inputfield"
                     />
                   </Col>
-                   <GlobalButton
+                  {/* <GlobalButton
                     text="Checkout"
                     border="none"
                     onClick={() => navigate(btn3Route)}
-                  />
+                  /> */}
                 </Row>
               </Col>
             </Row>
           </Container>
         </section>
+        <Modal
+          isOpen={isModalSuccess}
+          onClose={() => setModalSuccess(false)}
+          showHeader={false}
+          heading="Contact Us"
+        >
+          <div className="successModal">
+            <Image src={images.check} alt="Success" />
+            <h2 className="heading">Your order has been placed successfully</h2>
+            <p className="para">
+              your order will be delivered to you as soon as possible
+            </p>
+            <div className="btn_sec">
+              <GlobalButton
+                text="Back to Shopping Orders"
+                border="1px solid #000"
+                onClick={() => navigate("/")}
+              />
+            </div>
+          </div>
+        </Modal>
       </Layout>
     </div>
   );

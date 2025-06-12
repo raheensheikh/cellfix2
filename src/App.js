@@ -20,6 +20,7 @@ import CustomizePcs from "./pages/Customize-Pcs";
 import PrebuildPcs from "./pages/Prebuild-Pcs";
 import Services from "./pages/Services";
 import { ToastContainer } from "react-toastify";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -45,6 +46,8 @@ function App() {
           <Route path="/customize-pcs" element={<CustomizePcs />} />
           <Route path="/prebuild-pcs" element={<PrebuildPcs />} />
           <Route path="/services" element={<Services />} />
+          <Route path="/profile" element={<Profile />} />
+
         </Routes>
       </Router>
     </>
