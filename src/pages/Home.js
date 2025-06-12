@@ -21,7 +21,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setLogin, setToken, setUser } from "../redux/slices/userSlice.js";
 import { toast } from "react-toastify";
 import OverlayLoader from "../components/Loader.jsx";
-import { addToCart } from "../redux/slices/cartSlice.js";
+import { addToCart, incrementQuantity } from "../redux/slices/cartSlice.js";
 import Wholesale from "../components/Wholesale.jsx";
 
 const handleMapClick = () => {
@@ -277,6 +277,7 @@ const Home = () => {
     const { response, error } = await apiHelper("POST", "cart/add", {}, body);
     if (response) {
       console.log(response.data.data);
+      dispatch(incrementQuantity())
     } else {
       toast.error(error);
     }

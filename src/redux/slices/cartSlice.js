@@ -11,20 +11,20 @@ const cartSlice = createSlice({
     initialState,
     reducers: {
         addToCart(state, action) {
-            const product = action.payload;
-            const existingItem = state.items.find(item => item.id === product.id);
+            // const product = action.payload;
+            // const existingItem = state.items.find(item => item.id === product.id);
 
-            const quantityToAdd = product.quantity || 1;
-            const price = Number(product.price) || 0;
+            // const quantityToAdd = product.quantity || 1;
+            // const price = Number(product.price) || 0;
 
-            if (existingItem) {
-                existingItem.quantity += quantityToAdd;
-            } else {
-                state.items.push({ ...product, quantity: quantityToAdd });
-            }
+            // if (existingItem) {
+            //     existingItem.quantity += quantityToAdd;
+            // } else {
+            //     state.items.push({ ...product, quantity: quantityToAdd });
+            // }
 
-            state.totalQuantity += quantityToAdd;
-            state.totalPrice += price * quantityToAdd;
+            // state.totalQuantity += quantityToAdd;
+            // state.totalPrice += price * quantityToAdd;
         },
 
         removeFromCart(state, action) {
@@ -41,31 +41,33 @@ const cartSlice = createSlice({
         },
 
         incrementQuantity(state, action) {
-            const productId = action.payload;
-            const item = state.items.find(item => item.id === productId);
-            if (item) {
-                const price = Number(item.price) || 0;
-                item.quantity++;
-                state.totalQuantity++;
-                state.totalPrice += price;
-            }
+            // const productId = action.payload;
+            // const item = state.items.find(item => item.id === productId);
+            // if (item) {
+            //     const price = Number(item.price) || 0;
+            //     item.quantity++;
+            //     state.totalQuantity++;
+            //     state.totalPrice += price;
+            // }
+            state.totalQuantity = state.totalQuantity + 1
         },
 
         decrementQuantity(state, action) {
-            const productId = action.payload;
-            const item = state.items.find(item => item.id === productId);
-            if (item) {
-                const price = Number(item.price) || 0;
-                if (item.quantity > 1) {
-                    item.quantity--;
-                    state.totalQuantity--;
-                    state.totalPrice -= price;
-                } else if (item.quantity === 1) {
-                    state.totalQuantity--;
-                    state.totalPrice -= price;
-                    state.items = state.items.filter(item => item.id !== productId);
-                }
-            }
+            // const productId = action.payload;
+            // const item = state.items.find(item => item.id === productId);
+            // if (item) {
+            //     const price = Number(item.price) || 0;
+            //     if (item.quantity > 1) {
+            //         item.quantity--;
+            //         state.totalQuantity--;
+            //         state.totalPrice -= price;
+            //     } else if (item.quantity === 1) {
+            //         state.totalQuantity--;
+            //         state.totalPrice -= price;
+            //         state.items = state.items.filter(item => item.id !== productId);
+            //     }
+            // }
+            state.totalQuantity = state.totalQuantity - 1
         },
 
         clearCart(state) {

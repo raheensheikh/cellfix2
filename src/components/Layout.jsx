@@ -90,6 +90,7 @@ const Layout = ({
     );
     if (response) {
       setCartData(response.data.response.data);
+      dispatch(incrementQuantity())
     } else {
       toast.error(error);
     }
@@ -108,6 +109,7 @@ const Layout = ({
     );
     if (response) {
       setCartData(response.data.response.data);
+      dispatch(decrementQuantity())
     } else {
       toast.error(error);
     }
@@ -304,7 +306,7 @@ const Layout = ({
 
   useEffect(() => {
     getCart();
-  }, []);
+  }, [totalQuantity]);
 
   useEffect(() => {
     console.log("TOKEN: ", token);
