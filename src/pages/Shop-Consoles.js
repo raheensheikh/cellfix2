@@ -128,6 +128,8 @@ const ShopConsoles = () => {
                   onClick={() => navigate(`/details/${product.id}`)}
                   btn2Click={() => handleAddToCart(product)}
                   btn1Click={() => navigate("/checkout")}
+                  showPrice={true}
+                  price={product.price}
                 />
               </Col>
             ))

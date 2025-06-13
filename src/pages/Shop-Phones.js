@@ -145,7 +145,6 @@ const ShopPhones = () => {
                   btn1Click={() => navigate("/checkout")}
                   onClick={() => navigate(`/details/${product.id}`)}
                   showPrice={true}
-                  // price={product.price}
                 />
               </Col>
             ))

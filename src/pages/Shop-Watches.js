@@ -130,6 +130,8 @@ const ShopWatches = () => {
                   btn2Click={() => handleAddToCart(product)}
                   btn1Click={() => navigate("/checkout")}
                   onClick={() => navigate(`/details/${product.id}`)}
+                  showPrice={true}
+                  price={product.price}
                 />
               </Col>
             ))
