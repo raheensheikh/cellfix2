@@ -15,6 +15,7 @@ import { useDispatch } from "react-redux";
 import { decrementQuantity, incrementQuantity } from "../redux/slices/cartSlice.js";
 import { CardCvcElement, CardElement, CardExpiryElement, CardNumberElement, Elements, useElements, useStripe } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
+import OverlayLoader from "../components/Loader.jsx";
 const Checkout = () => {
   const navigate = useNavigate();
   const btn2Route = "/checkout";
@@ -22,6 +23,7 @@ const Checkout = () => {
   const [activeCard, setActiveCard] = useState(0);
   const [cartData, setCartData] = useState([]);
   const [isModalSuccess, setModalSuccess] = useState(false);
+  const [loading, setLoading] = useState(false)
   const [token, setToken] = useState(null);
   const [error, setError] = useState(null);
   const stripe = useStripe();
@@ -124,11 +126,21 @@ const Checkout = () => {
     }
   };
 
+  const handleRemoveItem = async (item) => {
+    const {response, error} = await apiHelper('DELETE', `cart/remove/${item.id}`, {}, null)
+    if(response){
+      setCartData(response.data.response.data);
+      dispatch(decrementQuantity())
+    }else{
+      toast.error(error);
+    }
+  }
+
   const cardImages = [
     images.card1,
     images.card2,
-    images.card3,
-    images.card4,
+    images.zelle,
+    images.cashApp,
     images.card5,
   ];
 
@@ -147,13 +159,21 @@ const Checkout = () => {
     }
     const { response, error } = await apiHelper('POST', 'cart/complete-purchase', {}, body)
     if (response) {
-      console.log(response.data.data)
+      setLoading(false)
+      console.log(response.data.response.data.payment_instructions)
+      const redirectUrl = response.data.response.data.payment_instructions?.payment_link;
+      console.log(redirectUrl)
+      setModalSuccess(true)
+      if(redirectUrl){
+        window.open(redirectUrl, '_blank');
+      }
     } else {
+      setLoading(false)
       toast.error(error)
     }
   }
 
-  const addCard = async () => {
+  const getCardToken = async () => {
     if (!stripe || !elements) return;
 
     const cardNumberElement = elements.getElement(CardNumberElement);
@@ -161,21 +181,58 @@ const Checkout = () => {
 
     if (error) {
       console.error(error);
-      setError(error.message);
+      toast.error(error)
       setToken(null);
+      setLoading(false)
     } else {
       console.log("Stripe Token:", token);
       setToken(token.id);
-      setError(null);
+      addCard(token.id)
+    }
+  }
+
+  const addCard = async (tokenId) => {
+    const body = {
+      token: tokenId
+    }
+    const {response, error} = await apiHelper('POST', 'cards/add', {}, body)
+    if(response){
+      console.log(response.data.data)
+      activateCard(response.data.data.id)
+    }else{
+      toast.error(error)
+      setLoading(false)
+    }
+  }
+
+  const activateCard = async (cardId) => {
+    const body = {
+      card_id: cardId
+    }
+    console.log(cardId)
+    const {response, error} = await apiHelper('POST', "cards/active", {}, body)
+    if(response){
+      console.log(response.data.data)
+      checkout('Stripe')
+    }else{
+      toast.error(error)
+      setLoading(false)
     }
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+      setLoading(true)
     if(activeCard === 0){
-      addCard()
-    }else{
-      checkout('Stripe')
+      getCardToken()
+    }else if (activeCard === 1){
+      checkout('PayPal')
+    }else if (activeCard === 2){
+      checkout('Zelle')
+    }else if (activeCard === 3){
+      checkout('Cashapp')
+    }else if (activeCard === 4){
+      checkout("COD")
     }
   };
 
@@ -371,7 +428,7 @@ const Checkout = () => {
                         quantity={item.quantity}
                         onIncrement={() => handleIncrement(item)}
                         onDecrement={() => handleDecrement(item)}
-                        onRemove={() => console.log("sdf")}
+                        onRemove={() => handleRemoveItem(item)}
                       />
                     ))}
                     <TotalCost
@@ -419,6 +476,7 @@ const Checkout = () => {
               </div>
             </div>
           </Modal>
+                <OverlayLoader visible={loading} />
         </Layout>
       </div>
   );

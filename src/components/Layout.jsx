@@ -18,6 +18,7 @@ import {
   decrementQuantity,
   incrementQuantity,
   removeFromCart,
+  setTotalCount,
 } from "../redux/slices/cartSlice.js";
 import { apiHelper } from "../services/index.js";
 import { toast } from "react-toastify";
@@ -51,7 +52,7 @@ const Layout = ({
   const [isModalBuy, setModalBuy] = useState(false);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
 
-  const { totalQuantity, totalPrice, items } = useSelector(
+  const { totalQuantity, totalPrice, items, rerender } = useSelector(
     (state) => state.cart
   );
   const { token } = useSelector((state) => state.user);
@@ -71,7 +72,11 @@ const Layout = ({
     const { response, error } = await apiHelper("GET", "cart/view", {}, null);
     if (response) {
       console.log("cart", response.data.response.data);
+      const items = response.data.response.data.items
+      const totalCount = items.reduce((sum, item) => sum + item.quantity, 0);
+      console.log('total COunt', totalCount)
       setCartData(response.data.response.data);
+      dispatch(setTotalCount(totalCount))
     } else {
       toast.error(error);
     }
@@ -319,7 +324,7 @@ const Layout = ({
 
   useEffect(() => {
     getCart();
-  }, [totalQuantity]);
+  }, [rerender]);
 
   useEffect(() => {
     console.log("TOKEN: ", token);

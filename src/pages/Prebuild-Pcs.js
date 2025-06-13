@@ -5,7 +5,7 @@ import Pc from "../components/Pc.jsx";
 import { apiHelper } from "../services/index.js";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
-import { addToCart } from "../redux/slices/cartSlice.js";
+import { addToCart, incrementQuantity } from "../redux/slices/cartSlice.js";
 import { useNavigate } from "react-router-dom";
 
 const PrebuildPcs = () => {
@@ -32,7 +32,12 @@ const PrebuildPcs = () => {
     dispatch(addToCart(product));
     const body = { product_id: product?.id };
     const { response, error } = await apiHelper("POST", "cart/add", {}, body);
-    if (!response) toast.error(error);
+    if(response){
+      dispatch(incrementQuantity())
+      navigate("/checkout")
+    }else{
+      toast.error(error)
+    }
   };
 
   useEffect(() => {
@@ -62,7 +67,7 @@ const PrebuildPcs = () => {
                     details={pc.description_points}
                     btn2Text="Buy Now"
                     price={`$${pc.price}`}
-                    btn2Route={() => navigate("/checkout")}
+                    btn2Route={() => handleAddToCart(pc)}
                     onClick={() => navigate(`/details/${pc.id}`)}
                   />
                 </Col>

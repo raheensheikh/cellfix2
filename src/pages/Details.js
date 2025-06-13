@@ -5,7 +5,7 @@ import React, { useState, useEffect } from "react";
 import GlobalButton from "../components/GlobalButton.jsx";
 import { apiHelper } from "../services/index.js";
 import { toast } from "react-toastify";
-import { addToCart } from "../redux/slices/cartSlice.js";
+import { addToCart, incrementQuantity } from "../redux/slices/cartSlice.js";
 import { useDispatch, useSelector } from "react-redux";
 
 const Details = () => {
@@ -36,21 +36,42 @@ const Details = () => {
     }
   };
   const handleAddToCart = async (product) => {
-    dispatch(addToCart(product));
     const body = {
       product_id: product?.id,
+      ...(selectedColor && { selected_color_id: selectedColor.id })
     };
     const { response, error } = await apiHelper("POST", "cart/add", {}, body);
     if (response) {
       console.log(response.data.data);
+      dispatch(incrementQuantity())
     } else {
       toast.error(error);
     }
-    // console.log('dssdfsdfs')
   };
+
+
+const handleBuyNow = async (product) => {
+    const body = {
+      product_id: product?.id,
+      ...(selectedColor && { selected_color_id: selectedColor.id })
+    };
+    const { response, error } = await apiHelper("POST", "cart/add", {}, body);
+    if (response) {
+      console.log(response.data.data);
+      dispatch(incrementQuantity())
+      navigate("/checkout")
+    } else {
+      toast.error(error);
+    }
+  };
+
   useEffect(() => {
     if (id) getDetails();
   }, [id]);
+
+  useEffect(()=>{
+    console.log('seleted color',selectedColor)
+  },[selectedColor])
 
   if (loading) return <p className="text-center">Loading...</p>;
   if (!product) return <p className="text-center">No product found.</p>;
@@ -131,7 +152,7 @@ const Details = () => {
                 <GlobalButton
                   text="Buy Now"
                   border="none"
-                  onClick={() => navigate("/checkout")}
+                  onClick={() => handleBuyNow(product)}
                 />
                 <GlobalButton
                   text="Add To Cart"

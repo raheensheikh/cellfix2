@@ -16,7 +16,7 @@ const OrderItem = ({
       <div className="d_flex">
         <Image src={image} alt="product" />
         {showCloseButton && (
-          <button className="removeItem" onClick={onRemove}>
+          <button className="removeItem" type="button" onClick={onRemove}>
             ×
           </button>
         )}
@@ -28,11 +28,11 @@ const OrderItem = ({
           <div className="d_flexBetween">
             <p className="price">${price}</p>
             <div className="counter">
-              <button onClick={onDecrement} className="counterBtn">
+              <button onClick={onDecrement} type="button" className="counterBtn">
                 −
               </button>
               <span className="qty">{quantity}</span>
-              <button onClick={onIncrement} className="counterBtn">
+              <button onClick={onIncrement} type="button" className="counterBtn">
                 +
               </button>
             </div>

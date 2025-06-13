@@ -1070,6 +1070,8 @@ ul {
 }
 .cards img {
   width: 100%;
+  height: 50px;
+  object-fit: contain;
 }
 .paymentCards {
   gap: 10px;
