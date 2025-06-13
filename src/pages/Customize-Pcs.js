@@ -127,7 +127,7 @@ const CustomizePcs = () => {
 
   return (
     <Layout>
-      <section className="shop_section my-5">
+      <section className="shop_section">
         <Container>
           <h2 className="heading mb-4">Build your custom PC</h2>
           <Row>

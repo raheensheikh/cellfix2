@@ -1387,3 +1387,22 @@ p {
 .buildPc .title2 {
   text-transform: capitalize;
 }
+.pagination {
+  list-style: none;
+  display: flex;
+  gap: 8px;
+  padding-left: 0;
+}
+
+.page-item .page-link {
+  border: 1px solid #ccc;
+  padding: 5px 10px;
+  cursor: pointer;
+  background-color: #fff;
+}
+
+.page-item.active .page-link {
+  background-color: #000;
+  color: #fff;
+  border-color: #000;
+}

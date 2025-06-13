@@ -28,6 +28,11 @@ const ShopPhones = () => {
   const [allProductsByBrand, setAllProductsByBrand] = useState({});
   const [productsByBrand, setProductsByBrand] = useState({});
   const [loading, setLoading] = useState(false);
+  const [currentPages, setCurrentPages] = useState({});
+  const paginate = (items = [], currentPage = 1, pageSize = 10) => {
+    const startIndex = (currentPage - 1) * pageSize;
+    return items.slice(startIndex, startIndex + pageSize);
+  };
 
   // 🔁 Fetch all products on mount
   const getProducts = async () => {
@@ -114,45 +119,79 @@ const ShopPhones = () => {
     return () => clearTimeout(debounce);
   }, [searchTerm]);
 
-  const tabs = Object.entries(productsByBrand).map(([brand, data]) => ({
-    eventKey: brand.toLowerCase().replace(/\s+/g, "-"),
-    image: brandImages[brand] || "https://via.placeholder.com/50",
-    content: (
-      <>
-        <SearchField searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-        <Row>
-          {data.items.length === 0 ? (
-            <Col>
-              <p className="text-muted">No products found.</p>
-            </Col>
-          ) : (
-            data.items.map((product) => (
-              <Col key={product.id} lg={4} md={4} sm={6} xs={6}>
-                <ProductCard
-                  image={
-                    product.images?.[0]?.url ||
-                    "https://via.placeholder.com/300x300?text=No+Image"
-                  }
-                  showTitle={true}
-                  title={product.title}
-                  btn1Text="Buy Now"
-                  btn2Text="Add to Cart"
-                  price={product.price}
-                  showBtnSec2={false}
-                  showBtnSec={true}
-                  showBorder={false}
-                  btn2Click={() => handleAddToCart(product)}
-                  btn1Click={() => navigate("/checkout")}
-                  onClick={() => navigate(`/details/${product.id}`)}
-                  showPrice={true}
-                />
+  const tabs = Object.entries(productsByBrand).map(([brand, data]) => {
+    const currentPage = currentPages[brand] || 1;
+    const paginatedItems = paginate(data.items, currentPage, 10);
+    const totalPages = Math.ceil(data.items.length / 10);
+
+    return {
+      eventKey: brand.toLowerCase().replace(/\s+/g, "-"),
+      image: brandImages[brand] || "https://via.placeholder.com/50",
+      content: (
+        <>
+          <SearchField searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+          <Row>
+            {paginatedItems.length === 0 ? (
+              <Col>
+                <p className="text-muted">No products found.</p>
               </Col>
-            ))
+            ) : (
+              paginatedItems.map((product) => (
+                <Col key={product.id} lg={4} md={4} sm={6} xs={6}>
+                  <ProductCard
+                    image={
+                      product.images?.[0]?.url ||
+                      "https://via.placeholder.com/300x300?text=No+Image"
+                    }
+                    showTitle={true}
+                    title={product.title}
+                    btn1Text="Buy Now"
+                    btn2Text="Add to Cart"
+                    price={product.price}
+                    showBtnSec2={false}
+                    showBtnSec={true}
+                    showBorder={false}
+                    btn2Click={() => handleAddToCart(product)}
+                    btn1Click={() => navigate("/checkout")}
+                    onClick={() => navigate(`/details/${product.id}`)}
+                    showPrice={true}
+                  />
+                </Col>
+              ))
+            )}
+          </Row>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="d-flex justify-content-center mt-4">
+              <ul className="pagination">
+                {Array.from({ length: totalPages }, (_, i) => (
+                  <li
+                    key={i}
+                    className={`page-item ${
+                      currentPage === i + 1 ? "active" : ""
+                    }`}
+                  >
+                    <button
+                      className="page-link"
+                      onClick={() =>
+                        setCurrentPages((prev) => ({
+                          ...prev,
+                          [brand]: i + 1,
+                        }))
+                      }
+                    >
+                      {i + 1}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
           )}
-        </Row>
-      </>
-    ),
-  }));
+        </>
+      ),
+    };
+  });
 
   return (
     <Layout>
