@@ -270,7 +270,6 @@ const Home = () => {
   };
 
   const handleAddToCart = async (product) => {
-    dispatch(addToCart(product));
     const body = {
       product_id: product?.id,
     };
@@ -278,6 +277,20 @@ const Home = () => {
     if (response) {
       console.log(response.data.data);
       dispatch(incrementQuantity());
+    } else {
+      toast.error(error);
+    }
+  };
+
+  const handleBuyNow = async (product) => {
+    const body = {
+      product_id: product?.id,
+    };
+    const { response, error } = await apiHelper("POST", "cart/add", {}, body);
+    if (response) {
+      console.log(response.data.data);
+      dispatch(incrementQuantity());
+      navigate("/checkout")
     } else {
       toast.error(error);
     }
@@ -604,7 +617,7 @@ const Home = () => {
                       showBtnSec={true}
                       showBorder={false}
                       btn2Click={() => handleAddToCart(item)}
-                      btn1Click={() => navigate("/checkout")}
+                      btn1Click={() => handleBuyNow(item)}
                       onClick={() => navigate(`/details/${item.id}`)}
                       price={item.price}
                       showPrice={true}
@@ -647,7 +660,7 @@ const Home = () => {
                       showBtnSec={true}
                       showBorder={false}
                       btn2Click={() => handleAddToCart(item)}
-                      btn1Click={() => navigate("/checkout")}
+                      btn1Click={() => handleBuyNow(item)}
                       onClick={() => navigate(`/details/${item.id}`)}
                       price={item.price}
                       showPrice={true}
@@ -690,7 +703,7 @@ const Home = () => {
                       showBtnSec={true}
                       showBorder={false}
                       btn2Click={() => handleAddToCart(item)}
-                      btn1Click={() => navigate("/checkout")}
+                      btn1Click={() => handleBuyNow(item)}
                       onClick={() => navigate(`/details/${item.id}`)}
                       price={item.price}
                       showPrice={true}
@@ -733,7 +746,7 @@ const Home = () => {
                       showBtnSec={true}
                       showBorder={false}
                       btn2Click={() => handleAddToCart(item)}
-                      btn1Click={() => navigate("/checkout")}
+                      btn1Click={() => handleBuyNow(item)}
                       onClick={() => navigate(`/details/${item.id}`)}
                       price={item.price}
                       showPrice={true}
@@ -776,7 +789,7 @@ const Home = () => {
                       showBtnSec={true}
                       showBorder={false}
                       btn2Click={() => handleAddToCart(item)}
-                      btn1Click={() => navigate("/checkout")}
+                      btn1Click={() => handleBuyNow(item)}
                       onClick={() => navigate(`/details/${item.id}`)}
                       price={item.price}
                       showPrice={true}
@@ -819,7 +832,7 @@ const Home = () => {
                       showBtnSec={true}
                       showBorder={false}
                       btn2Click={() => handleAddToCart(item)}
-                      btn1Click={() => navigate("/checkout")}
+                      btn1Click={() => handleBuyNow(item)}
                       onClick={() => navigate(`/details/${item.id}`)}
                     />
                   </Col>
