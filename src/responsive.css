@@ -152,7 +152,7 @@
   }
   .productCard_title {
     font-size: 18px;
-    height: 45px;
+    /* height: 45px; */
   }
 }
 @media (max-width: 1200px) {
@@ -338,9 +338,9 @@
   .itemFeatures {
     width: 100%;
   }
-  .productCard_title {
+  /* .productCard_title {
     font-size: 16px;
-  }
+  } */
   .services_banner {
     height: 200px;
   }
@@ -582,6 +582,9 @@
   .locationBg .heading {
     font-size: 32px;
   }
+  .productCard_title {
+    font-size: 16px;
+  }
 }
 @media (max-width: 575px) {
   footer {
@@ -693,9 +696,9 @@
   .onlineRepair_section .border-right {
     border-right: none;
   }
-  .productCard_title {
+  /* .productCard_title {
     font-size: 14px;
-  }
+  } */
   footer {
     padding: 20px 5px;
   }
@@ -761,8 +764,11 @@
   .locationBg {
     padding: 15px 10px !important;
   }
-  .offcanvas-cart {
+  /* .offcanvas-cart {
     width: calc(100% - 30px);
+  } */
+  .productCard_title {
+    width: 150px;
   }
   .cart-header .title2 {
     font-size: 20px;

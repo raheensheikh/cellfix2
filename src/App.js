@@ -28,7 +28,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/repair/:id" element={<Repair />} />
+          <Route path="/repair" element={<Repair />} />
           <Route path="/online-repair" element={<OnlineRepair />} />
           <Route path="/contact-us" element={<ContactUs />} />
           <Route path="/nearest-store" element={<NearestStore />} />

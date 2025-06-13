@@ -395,7 +395,7 @@ footer .heading {
 .productCard_img {
   margin-bottom: 10px;
 }
-
+/* 
 .productCard_title {
   font-size: 22px;
   color: #000;
@@ -408,10 +408,24 @@ footer .heading {
   overflow: hidden;
   text-overflow: ellipsis;
 
-  /* text-align: center; */
+  text-align: center;
   padding: 0 10px;
+} */
+.productCard_title {
+  width: 200px;
+  font-size: 22px;
+  color: #000;
+  font-family: "kindsans-semibold";
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: start;
+  text-transform: capitalize;
 }
-
+.repairCategories .productCard_title {
+  width: 100%;
+  text-align: center;
+}
 .productCard .btn_sec {
   gap: 5px;
 }
@@ -835,7 +849,7 @@ iframe {
 .productCard:hover {
   border: 1px solid #000;
   border-radius: 12px;
-  color: #fff;
+  /* color: #fff; */
 }
 .tabs_content .productCard:hover {
   border: 1px solid #000;

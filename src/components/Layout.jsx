@@ -76,7 +76,20 @@ const Layout = ({
       toast.error(error);
     }
   };
-
+  const removeItem = async (id) => {
+    const { response, error } = await apiHelper(
+      "DELETE",
+      `cart/remove/${id}`,
+      {},
+      null
+    );
+    if (response) {
+      console.log("Item removed", response.data.response.data);
+      setCartData(response.data.response.data);
+    } else {
+      toast.error(error);
+    }
+  };
   const handleIncrement = async (item) => {
     const body = {
       cart_id: item.id,
@@ -90,7 +103,7 @@ const Layout = ({
     );
     if (response) {
       setCartData(response.data.response.data);
-      dispatch(incrementQuantity())
+      dispatch(incrementQuantity());
     } else {
       toast.error(error);
     }
@@ -109,7 +122,7 @@ const Layout = ({
     );
     if (response) {
       setCartData(response.data.response.data);
-      dispatch(decrementQuantity())
+      dispatch(decrementQuantity());
     } else {
       toast.error(error);
     }
@@ -506,20 +519,25 @@ const Layout = ({
           </div>
 
           <div className="cart-body">
-            {/* Render your cart items here */}
-            {cartData.items?.map((item) => (
-              <OrderItem
-                key={item.product.id}
-                image={item.product.image}
-                title={item.product.title}
-                price={item.product.price}
-                showCloseButton={true}
-                quantity={item.quantity}
-                onIncrement={() => handleIncrement(item)}
-                onDecrement={() => handleDecrement(item)}
-                onRemove={() => dispatch(removeFromCart(item.id))}
-              />
-            ))}
+            {cartData.items && cartData.items.length > 0 ? (
+              cartData.items.map((item) => (
+                <OrderItem
+                  key={item.product.id}
+                  image={item.product.image}
+                  title={item.product.title}
+                  price={item.product.price}
+                  quantity={item.quantity}
+                  showCloseButton={true}
+                  onIncrement={() => handleIncrement(item)}
+                  onDecrement={() => handleDecrement(item)}
+                  onRemove={() => removeItem(item.id)}
+                />
+              ))
+            ) : (
+              <div className="empty-cart-message">
+                <p>Your cart is empty.</p>
+              </div>
+            )}
           </div>
 
           <div className="cart-footer">

@@ -277,7 +277,7 @@ const Home = () => {
     const { response, error } = await apiHelper("POST", "cart/add", {}, body);
     if (response) {
       console.log(response.data.data);
-      dispatch(incrementQuantity())
+      dispatch(incrementQuantity());
     } else {
       toast.error(error);
     }
@@ -564,7 +564,7 @@ const Home = () => {
           <Container>
             <h1 className="heading">What We Repair?</h1>
 
-            <Row>
+            <Row className="repairCategories">
               {repairCategories.map((item, index) => (
                 <Col key={item.id} lg={3} md={4} sm={6} xs={6}>
                   <ProductCard
@@ -575,7 +575,7 @@ const Home = () => {
                     showBtnSec2={true}
                     showBtnSec={false}
                     showBorder={true}
-                    btn3Click={() => navigate(`/repair/${item.id}`)}
+                    btn3Click={() => navigate(`/repair?id=${item.id}`)}
                   />
                 </Col>
               ))}
@@ -602,6 +602,8 @@ const Home = () => {
                       btn2Click={() => handleAddToCart(item)}
                       btn1Click={() => navigate("/checkout")}
                       onClick={() => navigate(`/details/${item.id}`)}
+                      price={item.price}
+                      showPrice={true}
                     />
                   </Col>
                 ))
@@ -643,6 +645,8 @@ const Home = () => {
                       btn2Click={() => handleAddToCart(item)}
                       btn1Click={() => navigate("/checkout")}
                       onClick={() => navigate(`/details/${item.id}`)}
+                      price={item.price}
+                      showPrice={true}
                     />
                   </Col>
                 ))
@@ -684,6 +688,8 @@ const Home = () => {
                       btn2Click={() => handleAddToCart(item)}
                       btn1Click={() => navigate("/checkout")}
                       onClick={() => navigate(`/details/${item.id}`)}
+                      price={item.price}
+                      showPrice={true}
                     />
                   </Col>
                 ))
@@ -725,6 +731,8 @@ const Home = () => {
                       btn2Click={() => handleAddToCart(item)}
                       btn1Click={() => navigate("/checkout")}
                       onClick={() => navigate(`/details/${item.id}`)}
+                      price={item.price}
+                      showPrice={true}
                     />
                   </Col>
                 ))
@@ -766,6 +774,8 @@ const Home = () => {
                       btn2Click={() => handleAddToCart(item)}
                       btn1Click={() => navigate("/checkout")}
                       onClick={() => navigate(`/details/${item.id}`)}
+                      price={item.price}
+                      showPrice={true}
                     />
                   </Col>
                 ))
