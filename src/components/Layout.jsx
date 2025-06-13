@@ -156,7 +156,7 @@ const Layout = ({
     );
     if (response) {
       console.log(response.data.response.data);
-      setModalOpen(false);
+      setLoginModalOpen(false)
       setModalOpen3(true);
       setPrevFrom("login");
       setUserId(response.data.response.data.user_id);
@@ -236,7 +236,7 @@ const Layout = ({
       }
       if (prevFrom === "signup") {
         setModalOpen3(false);
-        setModalOpen(true);
+        setLoginModalOpen(true);
       }
     } else {
       toast.error(error);
@@ -336,7 +336,7 @@ const Layout = ({
     }, 5000);
 
     return () => clearTimeout(timer);
-  }, [token, loginModalOpen]);
+  }, [token]);
 
   return (
     <div className="layout-wrapper">
