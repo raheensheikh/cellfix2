@@ -8,7 +8,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { Navigation, Pagination, Mousewheel, Keyboard } from "swiper/modules";
+import { Navigation, Pagination, Mousewheel, Keyboard, Autoplay } from "swiper/modules";
 import Specialities from "../components/Specialities";
 import ProductCard from "../components/ProductCard.jsx";
 import GlobalButton from "../components/GlobalButton.jsx";
@@ -247,15 +247,15 @@ const Home = () => {
     }
   };
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (!token) {
-        setModalOpen(true);
-      }
-    }, 5000);
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     if (!token) {
+  //       setModalOpen(true);
+  //     }
+  //   }, 5000);
 
-    return () => clearTimeout(timer);
-  }, []);
+  //   return () => clearTimeout(timer);
+  // }, []);
   const handleOtpChange = (e, index) => {
     const value = e.target.value.replace(/\D/, "");
 
@@ -489,7 +489,11 @@ const Home = () => {
             pagination={true}
             mousewheel={true}
             keyboard={true}
-            modules={[Pagination, Mousewheel, Keyboard]}
+            modules={[Pagination, Mousewheel, Keyboard, Autoplay]}
+            autoplay={{
+              delay: 3000, // 3 seconds
+              disableOnInteraction: false,
+            }}
             className="mySwiper"
           >
             <SwiperSlide>

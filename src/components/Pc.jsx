@@ -34,7 +34,7 @@ const Pc = ({
           border="none"
           onClick={(e) => {
             e.stopPropagation();
-            navigate(btn2Route);
+            btn2Route()
           }}
         />
        <p className="prices">{price}</p>

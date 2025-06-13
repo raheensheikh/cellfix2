@@ -4,6 +4,7 @@ const initialState = {
     items: [],
     totalQuantity: 0,
     totalPrice: 0,
+    rerender: 0
 };
 
 const cartSlice = createSlice({
@@ -49,7 +50,7 @@ const cartSlice = createSlice({
             //     state.totalQuantity++;
             //     state.totalPrice += price;
             // }
-            state.totalQuantity = state.totalQuantity + 1
+            state.rerender = state.rerender + 1
         },
 
         decrementQuantity(state, action) {
@@ -67,13 +68,18 @@ const cartSlice = createSlice({
             //         state.items = state.items.filter(item => item.id !== productId);
             //     }
             // }
-            state.totalQuantity = state.totalQuantity - 1
+            state.rerender = state.rerender - 1
+        },
+
+        setTotalCount(state,action) {
+            state.totalQuantity = action.payload
         },
 
         clearCart(state) {
             state.items = [];
             state.totalQuantity = 0;
             state.totalPrice = 0;
+            state.rerender = 0
         },
     },
 });
@@ -83,6 +89,7 @@ export const {
     removeFromCart,
     incrementQuantity,
     decrementQuantity,
+    setTotalCount,
     clearCart,
 } = cartSlice.actions;
 export default cartSlice.reducer;

@@ -103,6 +103,8 @@ const images = {
   pcbuild3: require("./pcbuild3.png"),
   pcbuild4: require("./pcbuild4.png"),
   check: require("./tick-square.png"),
+  zelle: require("./zelle.png"),
+  cashApp: require("./cashapp.png")
 };
 
 export default images;
