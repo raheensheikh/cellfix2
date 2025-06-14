@@ -72,11 +72,11 @@ const Layout = ({
     const { response, error } = await apiHelper("GET", "cart/view", {}, null);
     if (response) {
       console.log("cart", response.data.response.data);
-      const items = response.data.response.data.items
+      const items = response.data.response.data.items;
       const totalCount = items.reduce((sum, item) => sum + item.quantity, 0);
-      console.log('total COunt', totalCount)
+      console.log("total COunt", totalCount);
       setCartData(response.data.response.data);
-      dispatch(setTotalCount(totalCount))
+      dispatch(setTotalCount(totalCount));
     } else {
       toast.error(error);
     }
@@ -156,7 +156,7 @@ const Layout = ({
     );
     if (response) {
       console.log(response.data.response.data);
-      setLoginModalOpen(false)
+      setLoginModalOpen(false);
       setModalOpen3(true);
       setPrevFrom("login");
       setUserId(response.data.response.data.user_id);
@@ -369,9 +369,17 @@ const Layout = ({
                 <Link to="/online-repair" className="dropdown-item">
                   Online Repair
                 </Link>
-                <Link to="/repair" className="dropdown-item">
+                {/* <Link to="/" className="dropdown-item">
                   Repair On Store
-                </Link>
+                </Link> */}
+                <a
+                  href={`/repair?id=8`}
+                  className="dropdown-item"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Repair On Store
+                </a>
               </div>
             )}
           </div>

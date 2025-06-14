@@ -26,7 +26,7 @@ const ShopWatches = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
   const [currentPages, setCurrentPages] = useState({});
-  const pageSize = 10;
+  const pageSize = 12;
 
   const paginate = (items, pageNumber, pageSize) => {
     const startIndex = (pageNumber - 1) * pageSize;

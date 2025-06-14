@@ -29,12 +29,12 @@ const ShopPhones = () => {
   const [productsByBrand, setProductsByBrand] = useState({});
   const [loading, setLoading] = useState(false);
   const [currentPages, setCurrentPages] = useState({});
-  const paginate = (items = [], currentPage = 1, pageSize = 10) => {
+  const pageSize = 12;
+  const paginate = (items = [], currentPage = 1, pageSize = pageSize) => {
     const startIndex = (currentPage - 1) * pageSize;
     return items.slice(startIndex, startIndex + pageSize);
   };
 
-  // 🔁 Fetch all products on mount
   const getProducts = async () => {
     setLoading(true);
     const { response, error } = await apiHelper(
@@ -55,7 +55,6 @@ const ShopPhones = () => {
     }
   };
 
-  // 🔍 Fetch filtered products on search
   const handleSearch = async () => {
     if (!searchTerm.trim()) {
       setProductsByBrand(allProductsByBrand);
@@ -80,11 +79,9 @@ const ShopPhones = () => {
     }
   };
 
-  // 🧠 Helper to group products by brand
   const groupByBrand = (products, referenceBrands = {}) => {
     const grouped = {};
 
-    // Ensure all known brands are initialized even if empty
     Object.keys(referenceBrands).forEach((brand) => {
       grouped[brand] = { items: [] };
     });
@@ -121,8 +118,8 @@ const ShopPhones = () => {
 
   const tabs = Object.entries(productsByBrand).map(([brand, data]) => {
     const currentPage = currentPages[brand] || 1;
-    const paginatedItems = paginate(data.items, currentPage, 10);
-    const totalPages = Math.ceil(data.items.length / 10);
+    const paginatedItems = paginate(data.items, currentPage, pageSize);
+    const totalPages = Math.ceil(data.items.length / pageSize);
 
     return {
       eventKey: brand.toLowerCase().replace(/\s+/g, "-"),

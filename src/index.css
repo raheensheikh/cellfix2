@@ -1099,6 +1099,7 @@ ul {
 }
 .buildPc .title2 {
   font-weight: 600;
+  margin-bottom: 0;
 }
 .buildPc li {
   font-size: 14px;

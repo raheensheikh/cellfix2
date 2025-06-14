@@ -12,18 +12,22 @@ import { addToCart } from "../redux/slices/cartSlice.js";
 import { useNavigate } from "react-router-dom";
 import images from "../assets/images/index.js";
 
-
 const CustomizePcs = () => {
   const brandImages = {
-    Apple: images.apple,
-    Samsung: images.samsung,
-    Google: images.google,
-    LG: images.lg,
-    Motorola: images.motorola,
     Msi: images.msi || images.pcbuild1,
+    Gigabyte: images.gigabyte || images.pcbuild3,
+    Asus: images.asus || images.pcbuild2,
+    Intel: images.intel || images.pcbuild4,
   };
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [currentPages, setCurrentPages] = useState({});
+  const pageSize = 12;
+
+  const paginate = (items, page, size) => {
+    const start = (page - 1) * size;
+    return items.slice(start, start + size);
+  };
 
   const [brands, setBrands] = useState([]);
   const [selectedBrandIndex, setSelectedBrandIndex] = useState(0);
@@ -59,7 +63,12 @@ const CustomizePcs = () => {
     } else {
       setSelectedDevice("");
     }
-    setSearchTerm(""); 
+    setSearchTerm("");
+
+    setCurrentPages((prev) => ({
+      ...prev,
+      [brands[index].name]: 1,
+    }));
   };
 
   const handleAddToCart = async (product) => {
@@ -82,20 +91,23 @@ const CustomizePcs = () => {
 
   const tabsData = brands.map((brand, index) => {
     const brandProducts = filteredProducts(brand);
+    const currentPage = currentPages[brand.name] || 1;
+    const totalPages = Math.ceil(brandProducts.length / pageSize);
+    const paginatedItems = paginate(brandProducts, currentPage, pageSize);
 
     return {
       eventKey: brand.name,
-      image: brandImages[brand.name] || images.pcbuild1,
+      image: brandImages[brand.name] || images.pcbuild4,
       content: (
         <>
           <SearchField searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
           <Row>
-            {brandProducts.length === 0 ? (
+            {paginatedItems.length === 0 ? (
               <Col>
                 <p className="text-muted">No products found.</p>
               </Col>
             ) : (
-              brandProducts.map((product) => (
+              paginatedItems.map((product) => (
                 <Col key={product.id} lg={4} md={4} sm={6} xs={6}>
                   <ProductCard
                     image={
@@ -117,6 +129,33 @@ const CustomizePcs = () => {
               ))
             )}
           </Row>
+
+          {totalPages > 1 && (
+            <div className="d-flex justify-content-center mt-4">
+              <ul className="pagination">
+                {Array.from({ length: totalPages }, (_, i) => (
+                  <li
+                    key={i}
+                    className={`page-item ${
+                      currentPage === i + 1 ? "active" : ""
+                    }`}
+                  >
+                    <button
+                      className="page-link"
+                      onClick={() =>
+                        setCurrentPages((prev) => ({
+                          ...prev,
+                          [brand.name]: i + 1,
+                        }))
+                      }
+                    >
+                      {i + 1}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </>
       ),
     };
