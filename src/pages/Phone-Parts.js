@@ -19,7 +19,9 @@ const brandImages = {
   Google: images.google,
   LG: images.lg,
   Motorola: images.motorola,
+  Others: "https://via.placeholder.com/50?text=Others",
 };
+
 
 const PhoneParts = () => {
   const navigate = useNavigate();
@@ -163,7 +165,7 @@ const PhoneParts = () => {
                   <ProductCard
                     image={
                       item.images?.[0]?.url ||
-                      images.parts2 ||
+                      images.parts2 || 
                       "https://via.placeholder.com/300x300?text=No+Image"
                     }
                     showTitle={true}
