@@ -28,7 +28,7 @@ const ShopPhones = () => {
   const [allProductsByBrand, setAllProductsByBrand] = useState({});
   const [productsByBrand, setProductsByBrand] = useState({});
   const [loading, setLoading] = useState(false);
-  const [activeBrand, setActiveBrand] = useState("");
+  const [activeBrand, setActiveBrand] = useState("LG");
   const [brandToSubIdMap, setBrandToSubIdMap] = useState({});
 
   // 🔁 Fetch all products on mount
@@ -45,6 +45,7 @@ const ShopPhones = () => {
     if (response) {
       const products = response.data.response.data;
       const grouped = groupByBrand(products);
+      console.log('sdffsdf',grouped)
       setAllProductsByBrand(grouped);
       setProductsByBrand(grouped);
       const subcategoryMap = extractSubcategoryMap(products);
@@ -54,44 +55,44 @@ const ShopPhones = () => {
     }
   };
 
-const extractSubcategoryMap = (products) => {
-  const map = {};
-  products.forEach((product) => {
-    const brand = product.sub_category?.name;
-    const subId = product.sub_category?.id;
-    if (brand && subId && !map[brand]) {
-      map[brand] = subId;
-    }
-  });
-  return map;
-};
+  const extractSubcategoryMap = (products) => {
+    const map = {};
+    products.forEach((product) => {
+
+      const brand = product.sub_category?.name;
+      const subId = product.sub_category?.id;
+      console.log("opr", brand, subId)
+      if (brand && subId && !map[brand]) {
+        map[brand] = subId;
+      }
+    });
+    return map;
+  };
 
   // 🔍 Fetch filtered products on search
   const handleSearch = async () => {
-  if (!searchTerm.trim()) {
-    setProductsByBrand(allProductsByBrand);
-    return;
-  }
+    if (!searchTerm.trim()) {
+      setProductsByBrand(allProductsByBrand);
+      return;
+    }
 
-  setLoading(true);
-  const subcategoryId = brandToSubIdMap[activeBrand] || 7; // fallback if not found
+    const subcategoryId = brandToSubIdMap[activeBrand];
+    console.log('subcategoryId', activeBrand)
 
-  const { response, error } = await apiHelper(
-    "GET",
-    `products/search?subcategory_id=${subcategoryId}&search=${searchTerm.trim()}`,
-    {},
-    null
-  );
-  setLoading(false);
-
-  if (response) {
-    const searched = response.data.response.data;
-    const grouped = groupByBrand(searched, allProductsByBrand);
-    setProductsByBrand(grouped);
-  } else {
-    toast.error(error);
-  }
-};
+    const { response, error } = await apiHelper(
+      "GET",
+      `products/search?subcategory_id=${subcategoryId}&search=${searchTerm.trim()}`,
+      {},
+      null
+    );
+    if (response) {
+      const searched = response.data.response.data;
+      const grouped = groupByBrand(searched, allProductsByBrand);
+      setProductsByBrand(grouped);
+    } else {
+      toast.error(error);
+    }
+  };
 
   // 🧠 Helper to group products by brand
   const groupByBrand = (products, referenceBrands = {}) => {
@@ -117,9 +118,9 @@ const extractSubcategoryMap = (products) => {
     dispatch(addToCart(product));
     const body = { product_id: product?.id };
     const { response, error } = await apiHelper("POST", "cart/add", {}, body);
-    if(response){
+    if (response) {
       dispatch(incrementQuantity())
-    }else{
+    } else {
       toast.error(error);
     }
   };
@@ -128,10 +129,10 @@ const extractSubcategoryMap = (products) => {
     dispatch(addToCart(product));
     const body = { product_id: product?.id };
     const { response, error } = await apiHelper("POST", "cart/add", {}, body);
-    if(response){
+    if (response) {
       dispatch(incrementQuantity())
       navigate('/checkout')
-    }else{
+    } else {
       toast.error(error);
     }
   };
@@ -153,7 +154,7 @@ const extractSubcategoryMap = (products) => {
     image: brandImages[brand.split(' ')[0]] || "https://via.placeholder.com/50",
     content: (
       <>
-        <SearchField searchTerm={searchTerm} setSearchTerm={setSearchTerm} onSearch={()=>console.log(searchTerm)}/>
+        <SearchField searchTerm={searchTerm} setSearchTerm={setSearchTerm} onSearch={() => console.log(searchTerm)} />
         <Row>
           {data.items.length === 0 ? (
             <Col>
@@ -195,13 +196,13 @@ const extractSubcategoryMap = (products) => {
       <h2 className="heading">
         Shop the best products from your favorite brands!
       </h2>
-      <Container>{!loading && <DynamicTabs tabsData={tabs} 
-      onTabChange={(key) => {
-  const brandName = Object.keys(productsByBrand).find(
-    brand => brand.toLowerCase().replace(/\s+/g, "-") === key
-  );
-  setActiveBrand(brandName);
-}}
+      <Container>{!loading && <DynamicTabs tabsData={tabs}
+        onTabChange={(key) => {
+          const brandName = Object.keys(productsByBrand).find(
+            brand => brand.toLowerCase().replace(/\s+/g, "-") === key
+          );
+          setActiveBrand(brandName);
+        }}
       />}</Container>
     </Layout>
   );
