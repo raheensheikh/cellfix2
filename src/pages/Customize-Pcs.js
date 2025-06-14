@@ -21,30 +21,32 @@ const CustomizePcs = () => {
   };
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [currentPages, setCurrentPages] = useState({});
   const pageSize = 12;
+
+  const [brands, setBrands] = useState([]);
+  const [selectedBrandIndex, setSelectedBrandIndex] = useState(0);
+  const [selectedDevice, setSelectedDevice] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [productsMap, setProductsMap] = useState({});
+  const [currentPages, setCurrentPages] = useState({});
 
   const paginate = (items, page, size) => {
     const start = (page - 1) * size;
     return items.slice(start, start + size);
   };
 
-  const [brands, setBrands] = useState([]);
-  const [selectedBrandIndex, setSelectedBrandIndex] = useState(0);
-  const [selectedDevice, setSelectedDevice] = useState("");
-  const [searchTerm, setSearchTerm] = useState("");
-
   const getProducts = async () => {
     const { response, error } = await apiHelper(
       "GET",
       "products/custom-pc-categories"
     );
-
     if (response) {
       const data = response.data.response.data;
       setBrands(data);
       if (data.length > 0 && data[0].sub_categories.length > 0) {
-        setSelectedDevice(data[0].sub_categories[0].name);
+        const firstDevice = data[0].sub_categories[0].name;
+        setSelectedDevice(firstDevice);
+        fetchProducts(data[0].sub_categories[0].id);
       }
     } else {
       toast.error(error);
@@ -55,20 +57,46 @@ const CustomizePcs = () => {
     getProducts();
   }, []);
 
+  const fetchProducts = async (subCategoryId) => {
+    const { response, error } = await apiHelper(
+      "GET",
+      `products/search?subcategory_id=${subCategoryId}`
+    );
+    if (response) {
+      setProductsMap((prev) => ({
+        ...prev,
+        [subCategoryId]: response.data.response.data || [],
+      }));
+    } else {
+      toast.error("Failed to load products");
+    }
+  };
+
   const handleTabSelect = (index) => {
     setSelectedBrandIndex(index);
     const selected = brands[index];
     if (selected?.sub_categories?.length > 0) {
-      setSelectedDevice(selected.sub_categories[0].name);
+      const firstDevice = selected.sub_categories[0];
+      setSelectedDevice(firstDevice.name);
+      fetchProducts(firstDevice.id);
     } else {
       setSelectedDevice("");
     }
     setSearchTerm("");
-
     setCurrentPages((prev) => ({
       ...prev,
       [brands[index].name]: 1,
     }));
+  };
+
+  const handleDeviceChange = (deviceName) => {
+    setSelectedDevice(deviceName);
+    const selectedSub = brands[selectedBrandIndex].sub_categories.find(
+      (sub) => sub.name === deviceName
+    );
+    if (selectedSub && !productsMap[selectedSub.id]) {
+      fetchProducts(selectedSub.id);
+    }
   };
 
   const handleAddToCart = async (product) => {
@@ -78,22 +106,21 @@ const CustomizePcs = () => {
     if (!response) toast.error(error);
   };
 
-  const filteredProducts = (brand) => {
-    let items = brand?.sub_categories?.flatMap((sub) => sub.products || []);
+  const tabsData = brands.map((brand, index) => {
+    const sub = brand.sub_categories.find((s) => s.name === selectedDevice);
+    const subId = sub?.id;
+    let items = productsMap[subId] || [];
+
     if (searchTerm.trim()) {
       const search = searchTerm.toLowerCase();
       items = items.filter((item) =>
         item?.title?.toLowerCase().includes(search)
       );
     }
-    return items || [];
-  };
 
-  const tabsData = brands.map((brand, index) => {
-    const brandProducts = filteredProducts(brand);
     const currentPage = currentPages[brand.name] || 1;
-    const totalPages = Math.ceil(brandProducts.length / pageSize);
-    const paginatedItems = paginate(brandProducts, currentPage, pageSize);
+    const totalPages = Math.ceil(items.length / pageSize);
+    const paginatedItems = paginate(items, currentPage, pageSize);
 
     return {
       eventKey: brand.name,
@@ -129,7 +156,6 @@ const CustomizePcs = () => {
               ))
             )}
           </Row>
-
           {totalPages > 1 && (
             <div className="d-flex justify-content-center mt-4">
               <ul className="pagination">
@@ -174,7 +200,7 @@ const CustomizePcs = () => {
               <DeviceFilterSidebar
                 devices={devices}
                 selectedDevice={selectedDevice}
-                onSelect={setSelectedDevice}
+                onSelect={handleDeviceChange}
               />
             </Col>
             <Col lg={9} md={9} sm={12}>
