@@ -9,7 +9,7 @@ import { apiHelper } from "../services/index.js";
 import { toast } from "react-toastify";
 import images from "../assets/images/index.js";
 import { useDispatch } from "react-redux";
-import { addToCart } from "../redux/slices/cartSlice.js";
+import { addToCart, incrementQuantity } from "../redux/slices/cartSlice.js";
 import { useNavigate } from "react-router-dom";
 
 const brandImages = {
@@ -28,6 +28,8 @@ const ShopPhones = () => {
   const [allProductsByBrand, setAllProductsByBrand] = useState({});
   const [productsByBrand, setProductsByBrand] = useState({});
   const [loading, setLoading] = useState(false);
+  const [activeBrand, setActiveBrand] = useState("LG");
+  const [brandToSubIdMap, setBrandToSubIdMap] = useState({});
   const [currentPages, setCurrentPages] = useState({});
   const pageSize = 12;
   const paginate = (items = [], currentPage = 1, pageSize = pageSize) => {
@@ -48,28 +50,46 @@ const ShopPhones = () => {
     if (response) {
       const products = response.data.response.data;
       const grouped = groupByBrand(products);
+      console.log('sdffsdf',grouped)
       setAllProductsByBrand(grouped);
       setProductsByBrand(grouped);
+      const subcategoryMap = extractSubcategoryMap(products);
+      setBrandToSubIdMap(subcategoryMap);
     } else {
       toast.error(error);
     }
   };
 
+  const extractSubcategoryMap = (products) => {
+    const map = {};
+    products.forEach((product) => {
+
+      const brand = product.sub_category?.name;
+      const subId = product.sub_category?.id;
+      console.log("opr", brand, subId)
+      if (brand && subId && !map[brand]) {
+        map[brand] = subId;
+      }
+    });
+    return map;
+  };
+
+  // 🔍 Fetch filtered products on search
   const handleSearch = async () => {
     if (!searchTerm.trim()) {
       setProductsByBrand(allProductsByBrand);
       return;
     }
 
-    setLoading(true);
+    const subcategoryId = brandToSubIdMap[activeBrand];
+    console.log('subcategoryId', activeBrand)
+
     const { response, error } = await apiHelper(
       "GET",
-      `products/search?subcategory_id=7&search=${searchTerm.trim()}`,
+      `products/search?subcategory_id=${subcategoryId}&search=${searchTerm.trim()}`,
       {},
       null
     );
-    setLoading(false);
-
     if (response) {
       const searched = response.data.response.data;
       const grouped = groupByBrand(searched, allProductsByBrand);
@@ -101,7 +121,23 @@ const ShopPhones = () => {
     dispatch(addToCart(product));
     const body = { product_id: product?.id };
     const { response, error } = await apiHelper("POST", "cart/add", {}, body);
-    if (!response) toast.error(error);
+    if (response) {
+      dispatch(incrementQuantity())
+    } else {
+      toast.error(error);
+    }
+  };
+
+  const handleBuyNow = async (product) => {
+    dispatch(addToCart(product));
+    const body = { product_id: product?.id };
+    const { response, error } = await apiHelper("POST", "cart/add", {}, body);
+    if (response) {
+      dispatch(incrementQuantity())
+      navigate('/checkout')
+    } else {
+      toast.error(error);
+    }
   };
 
   useEffect(() => {
@@ -116,79 +152,45 @@ const ShopPhones = () => {
     return () => clearTimeout(debounce);
   }, [searchTerm]);
 
-  const tabs = Object.entries(productsByBrand).map(([brand, data]) => {
-    const currentPage = currentPages[brand] || 1;
-    const paginatedItems = paginate(data.items, currentPage, pageSize);
-    const totalPages = Math.ceil(data.items.length / pageSize);
-
-    return {
-      eventKey: brand.toLowerCase().replace(/\s+/g, "-"),
-      image: brandImages[brand] || "https://via.placeholder.com/50",
-      content: (
-        <>
-          <SearchField searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-          <Row>
-            {paginatedItems.length === 0 ? (
-              <Col>
-                <p className="text-muted">No products found.</p>
+  const tabs = Object.entries(productsByBrand).map(([brand, data]) => ({
+    eventKey: brand.toLowerCase().replace(/\s+/g, "-"),
+    image: brandImages[brand.split(' ')[0]] || "https://via.placeholder.com/50",
+    content: (
+      <>
+        <SearchField searchTerm={searchTerm} setSearchTerm={setSearchTerm} onSearch={() => console.log(searchTerm)} />
+        <Row>
+          {data.items.length === 0 ? (
+            <Col>
+              <p className="text-muted">No products found.</p>
+            </Col>
+          ) : (
+            data.items.map((product) => (
+              <Col key={product.id} lg={4} md={4} sm={6} xs={6}>
+                <ProductCard
+                  image={
+                    product.images?.[0]?.url ||
+                    "https://via.placeholder.com/300x300?text=No+Image"
+                  }
+                  showTitle={true}
+                  title={product.title}
+                  btn1Text="Buy Now"
+                  btn2Text="Add to Cart"
+                  price={product.price}
+                  showBtnSec2={false}
+                  showBtnSec={true}
+                  showBorder={false}
+                  btn2Click={() => handleAddToCart(product)}
+                  btn1Click={() => handleBuyNow(product)}
+                  onClick={() => navigate(`/details/${product.id}`)}
+                  showPrice={true}
+                />
               </Col>
-            ) : (
-              paginatedItems.map((product) => (
-                <Col key={product.id} lg={4} md={4} sm={6} xs={6}>
-                  <ProductCard
-                    image={
-                      product.images?.[0]?.url ||
-                      "https://via.placeholder.com/300x300?text=No+Image"
-                    }
-                    showTitle={true}
-                    title={product.title}
-                    btn1Text="Buy Now"
-                    btn2Text="Add to Cart"
-                    price={product.price}
-                    showBtnSec2={false}
-                    showBtnSec={true}
-                    showBorder={false}
-                    btn2Click={() => handleAddToCart(product)}
-                    btn1Click={() => navigate("/checkout")}
-                    onClick={() => navigate(`/details/${product.id}`)}
-                    showPrice={true}
-                  />
-                </Col>
-              ))
-            )}
-          </Row>
-
-          {/* Pagination */}
-          {totalPages > 1 && (
-            <div className="d-flex justify-content-center mt-4">
-              <ul className="pagination">
-                {Array.from({ length: totalPages }, (_, i) => (
-                  <li
-                    key={i}
-                    className={`page-item ${
-                      currentPage === i + 1 ? "active" : ""
-                    }`}
-                  >
-                    <button
-                      className="page-link"
-                      onClick={() =>
-                        setCurrentPages((prev) => ({
-                          ...prev,
-                          [brand]: i + 1,
-                        }))
-                      }
-                    >
-                      {i + 1}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            ))
           )}
-        </>
-      ),
-    };
-  });
+        </Row>
+      </>
+    ),
+  }));
 
   return (
     <Layout>
@@ -197,7 +199,14 @@ const ShopPhones = () => {
       <h2 className="heading">
         Shop the best products from your favorite brands!
       </h2>
-      <Container>{!loading && <DynamicTabs tabsData={tabs} />}</Container>
+      <Container>{!loading && <DynamicTabs tabsData={tabs}
+        onTabChange={(key) => {
+          const brandName = Object.keys(productsByBrand).find(
+            brand => brand.toLowerCase().replace(/\s+/g, "-") === key
+          );
+          setActiveBrand(brandName);
+        }}
+      />}</Container>
     </Layout>
   );
 };

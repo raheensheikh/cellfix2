@@ -231,6 +231,7 @@ const Repair = () => {
       const { response } = await apiHelper(
         "POST",
         "repair/repair-on-store",
+        {},
         payload
       );
 
