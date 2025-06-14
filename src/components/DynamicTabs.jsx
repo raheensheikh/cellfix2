@@ -1,9 +1,16 @@
 import React from "react";
 import { Tab, Nav } from "react-bootstrap";
 
-const DynamicTabs = ({ tabsData }) => {
+const DynamicTabs = ({ tabsData, onTabChange }) => {
   return (
-    <Tab.Container defaultActiveKey={tabsData[0]?.eventKey}>
+    <Tab.Container 
+      defaultActiveKey={tabsData[0]?.eventKey} 
+      onSelect={(selectedKey) => {
+        if (onTabChange) {
+          onTabChange(selectedKey);
+        }
+      }}
+    >
       <Nav variant="tabs" className="d-flex align-items-center border-bottom-none">
         {tabsData.map((tab) => (
           <Nav.Item key={tab.eventKey}>

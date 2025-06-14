@@ -116,7 +116,7 @@ const ShopWatches = () => {
 
     return {
       eventKey: brand.toLowerCase().replace(/\s+/g, "-"),
-      image: brandImages[brand] || "https://via.placeholder.com/50",
+      image: brandImages[brand.split(" ")[0]] || "https://via.placeholder.com/50",
       content: (
         <>
           <SearchField searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
