@@ -41,6 +41,9 @@ const PhoneParts = () => {
 
   const [allSubSubCategories, setAllSubSubCategories] = useState([]);
   const [selectedDevice, setSelectedDevice] = useState("");
+  const [brandToSubIdMap, setBrandToSubIdMap] = useState({});
+const [activeBrand, setActiveBrand] = useState("");
+
 
   const groupByBrand = (products, referenceBrands = {}) => {
     const grouped = {};
@@ -79,6 +82,17 @@ const PhoneParts = () => {
         ),
       ];
 
+      const brandToSubIdMap = {};
+parts.forEach((product) => {
+  const brand = product.sub_category?.name || "Others";
+  const subId = product.sub_category?.id;
+  if (brand && subId && !brandToSubIdMap[brand]) {
+    brandToSubIdMap[brand] = subId;
+  }
+});
+setBrandToSubIdMap(brandToSubIdMap);
+
+
       setAllSubSubCategories(uniqueDevices);
 
       if (!selectedDevice && uniqueDevices.length) {
@@ -110,14 +124,18 @@ const PhoneParts = () => {
       setPartsByBrand(allPartsByBrand);
       return;
     }
-
-    setLoading(true);
+  
+    const subcategoryId = brandToSubIdMap[activeBrand];
+    if (!subcategoryId) {
+      toast.warn("Subcategory not found for selected brand.");
+      return;
+    }
+  
     const { response, error } = await apiHelper(
       "GET",
-      `products/search?subcategory_id=1&search=${searchTerm.trim()}`
+      `products/search?subcategory_id=${subcategoryId}&search=${searchTerm.trim()}`
     );
-    setLoading(false);
-
+  
     if (response) {
       const searched = response.data.response.data.filter(
         (item) => item.sub_sub_category?.name === selectedDevice
@@ -128,6 +146,8 @@ const PhoneParts = () => {
       toast.error(error);
     }
   };
+  
+  
 
   useEffect(() => {
     const debounce = setTimeout(() => {
@@ -233,7 +253,17 @@ const PhoneParts = () => {
               {loading ? (
                 <div className="text-center py-5">Loading parts...</div>
               ) : (
-                <DynamicTabs tabsData={tabs} />
+                <DynamicTabs tabsData={tabs} 
+                onTabChange={(key) => {
+                  const brand = Object.keys(partsByBrand).find(
+                    (b) => b.toLowerCase().replace(/\s+/g, "-") === key
+                  );
+                  if (brand) {
+                    setActiveBrand(brand);
+                    setSearchTerm("");
+                  }
+                }}
+                />
               )}
             </Col>
           </Row>

@@ -25,6 +25,8 @@ const ShopWatches = () => {
   const [filteredProductsByBrand, setFilteredProductsByBrand] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
+  const [activeBrand, setActiveBrand] = useState("");
+  const [brandToSubIdMap, setBrandToSubIdMap] = useState({});
   const [currentPages, setCurrentPages] = useState({});
   const pageSize = 12;
 
@@ -45,15 +47,25 @@ const ShopWatches = () => {
     if (response) {
       const products = response.data.response.data;
       const grouped = {};
+      const map = {};
       products.forEach((product) => {
         const brand = product.sub_category?.name || "Others";
+        const subId = product.sub_category?.id;
         if (!grouped[brand]) {
           grouped[brand] = { items: [] };
         }
         grouped[brand].items.push(product);
+
+        if (brand && subId && !map[brand]) {
+          map[brand] = subId;
+        }
       });
       setAllProductsByBrand(grouped);
       setFilteredProductsByBrand(grouped);
+      setBrandToSubIdMap(map);
+
+      const firstBrand = Object.keys(grouped)[0];
+      if (firstBrand) setActiveBrand(firstBrand);
     } else {
       toast.error(error);
     }
@@ -65,12 +77,16 @@ const ShopWatches = () => {
       return;
     }
 
-    setLoading(true);
+    const subcategoryId = brandToSubIdMap[activeBrand];
+    if (!subcategoryId) {
+      toast.warn("No subcategory found for this brand.");
+      return;
+    }
     const { response, error } = await apiHelper(
       "GET",
-      `products/search?subcategory_id=12&search=${query}`
+      `products/search?subcategory_id=${subcategoryId}&search=${query}`
     );
-    setLoading(false);
+
     if (response) {
       const products = response.data.response.data;
       const grouped = {};
@@ -87,9 +103,12 @@ const ShopWatches = () => {
     }
   };
 
+
   useEffect(() => {
     getProducts();
   }, []);
+
+
   const handleAddToCart = async (product) => {
     dispatch(addToCart(product));
     const body = {
@@ -105,15 +124,16 @@ const ShopWatches = () => {
   useEffect(() => {
     const timeout = setTimeout(() => {
       searchProducts(searchTerm);
-    }, 400); // debounce
+    }, 400); 
     return () => clearTimeout(timeout);
   }, [searchTerm]);
 
-  const tabs = Object.entries(filteredProductsByBrand).map(([brand, data]) => {
+  const tabs = Object.keys(allProductsByBrand).map((brand) => {
+    const data = filteredProductsByBrand[brand] || { items: [] };
     const currentPage = currentPages[brand] || 1;
     const totalPages = Math.ceil(data.items.length / pageSize);
     const paginatedItems = paginate(data.items, currentPage, pageSize);
-
+  
     return {
       eventKey: brand.toLowerCase().replace(/\s+/g, "-"),
       image: brandImages[brand.split(" ")[0]] || "https://via.placeholder.com/50",
@@ -131,7 +151,7 @@ const ShopWatches = () => {
                   <ProductCard
                     image={
                       product.images?.[0]?.url ||
-                      "https://via.placeholder.com/300x300?text=No+Image"
+                      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXxZR0_1ISIJx_T4oB5-5OJVSNgSMFLe8eCw&s"
                     }
                     showTitle={true}
                     title={product.title}
@@ -150,7 +170,7 @@ const ShopWatches = () => {
               ))
             )}
           </Row>
-
+  
           {totalPages > 1 && (
             <div className="d-flex justify-content-center mt-4">
               <ul className="pagination">
@@ -181,6 +201,7 @@ const ShopWatches = () => {
       ),
     };
   });
+  
 
   return (
     <Layout>
@@ -189,7 +210,14 @@ const ShopWatches = () => {
       <h2 className="heading">
         Shop the best products from your favorite brands!
       </h2>
-      <Container>{!loading && <DynamicTabs tabsData={tabs} />}</Container>
+      <Container>{!loading && <DynamicTabs tabsData={tabs}
+        onTabChange={(key) => {
+          const selectedBrand = Object.keys(filteredProductsByBrand).find(
+            (brand) => brand.toLowerCase().replace(/\s+/g, "-") === key
+          );
+          if (selectedBrand) setActiveBrand(selectedBrand);
+        }}
+      />}</Container>
     </Layout>
   );
 };

@@ -30,6 +30,8 @@ const ShopConsoles = () => {
   const [loading, setLoading] = useState(false);
   const [currentPages, setCurrentPages] = useState({});
   const pageSize = 12;
+  const [activeBrand, setActiveBrand] = useState("");
+  const [brandToSubIdMap, setBrandToSubIdMap] = useState({});
 
   const paginate = (items, pageNumber, pageSize) => {
     const startIndex = (pageNumber - 1) * pageSize;
@@ -46,13 +48,25 @@ const ShopConsoles = () => {
     if (response) {
       const products = response.data.response.data;
       const grouped = {};
+      const map = {}
       products.forEach((product) => {
+        console.log("product",product)
         const brand = product.sub_category?.name || "Others";
+        const subId = product.sub_category?.id;
         if (!grouped[brand]) grouped[brand] = { items: [] };
         grouped[brand].items.push(product);
+
+        if (brand && subId && !map[brand]) {
+          map[brand] = subId;
+        }
       });
+      console.log('map',map)
       setAllProductsByBrand(grouped);
       setFilteredProductsByBrand(grouped);
+      setBrandToSubIdMap(map);
+
+      const firstBrand = Object.keys(grouped)[0];
+      if (firstBrand) setActiveBrand(firstBrand);
     } else {
       toast.error(error);
     }
@@ -64,12 +78,17 @@ const ShopConsoles = () => {
       return;
     }
 
-    setLoading(true);
+    const subcategoryId = brandToSubIdMap[activeBrand];
+    if (!subcategoryId) {
+      toast.warn("No subcategory found for this brand.");
+      return;
+    }
+
     const { response, error } = await apiHelper(
       "GET",
-      `products/search?subcategory_id=22&search=${query}`
+      `products/search?subcategory_id=${subcategoryId}&search=${query}`
     );
-    setLoading(false);
+
     if (response) {
       const products = response.data.response.data;
       const grouped = {};
@@ -83,7 +102,6 @@ const ShopConsoles = () => {
       toast.error(error);
     }
   };
-
   const handleAddToCart = async (product) => {
     dispatch(addToCart(product));
     const body = {
@@ -130,7 +148,7 @@ const ShopConsoles = () => {
                   <ProductCard
                     image={
                       product.images?.[0]?.url ||
-                      "https://via.placeholder.com/300x300?text=No+Image"
+                      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXxZR0_1ISIJx_T4oB5-5OJVSNgSMFLe8eCw&s"
                     }
                     showTitle={true}
                     title={product.title}
@@ -188,7 +206,14 @@ const ShopConsoles = () => {
       <h2 className="heading">
         Shop the best products from your favorite brands!
       </h2>
-      <Container>{!loading && <DynamicTabs tabsData={tabs} />}</Container>
+      <Container>{!loading && <DynamicTabs tabsData={tabs} 
+        onTabChange={(key) => {
+          const selectedBrand = Object.keys(filteredProductsByBrand).find(
+            (brand) => brand.toLowerCase().replace(/\s+/g, "-") === key
+          );
+          if (selectedBrand) setActiveBrand(selectedBrand);
+        }}
+      />}</Container>
     </Layout>
   );
 };

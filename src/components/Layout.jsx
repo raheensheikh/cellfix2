@@ -15,6 +15,7 @@ import ProductCard from "./ProductCard.jsx";
 import OrderItem from "../components/OrderItem.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  clearCart,
   decrementQuantity,
   incrementQuantity,
   removeFromCart,
@@ -209,6 +210,7 @@ const Layout = ({
       // optionally: clear auth tokens, user context, etc.
       toast.success("Logged out successfully");
       navigate("/"); // redirect to home or login page
+      dispatch(clearCart())
     } else {
       toast.error(error || "Failed to logout");
     }
