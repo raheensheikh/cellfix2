@@ -29,6 +29,8 @@ const CustomizePcs = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [productsMap, setProductsMap] = useState({});
   const [currentPages, setCurrentPages] = useState({});
+  const [filteredProductsMap, setFilteredProductsMap] = useState({});
+
 
   const paginate = (items, page, size) => {
     const start = (page - 1) * size;
@@ -57,6 +59,35 @@ const CustomizePcs = () => {
     getProducts();
   }, []);
 
+  useEffect(() => {
+    const selectedBrand = brands[selectedBrandIndex];
+    const selectedSub = selectedBrand?.sub_categories?.find(
+      (sub) => sub.name === selectedDevice
+    );
+    const subId = selectedSub?.id;
+    const allItems = productsMap[subId] || [];
+
+    const timeout = setTimeout(() => {
+      if (!searchTerm.trim()) {
+        setFilteredProductsMap((prev) => ({
+          ...prev,
+          [subId]: allItems,
+        }));
+      } else {
+        const search = searchTerm.toLowerCase();
+        const filtered = allItems.filter((item) =>
+          item?.title?.toLowerCase().includes(search)
+        );
+        setFilteredProductsMap((prev) => ({
+          ...prev,
+          [subId]: filtered,
+        }));
+      }
+    }, 400);
+
+    return () => clearTimeout(timeout);
+  }, [searchTerm, selectedBrandIndex, selectedDevice, productsMap]);
+
   const fetchProducts = async (subCategoryId) => {
     const { response, error } = await apiHelper(
       "GET",
@@ -66,6 +97,10 @@ const CustomizePcs = () => {
       setProductsMap((prev) => ({
         ...prev,
         [subCategoryId]: response.data.response.data || [],
+      }));
+      setFilteredProductsMap((prev) => ({
+        ...prev,
+        [subCategoryId]: response.data.response.data,
       }));
     } else {
       toast.error("Failed to load products");
@@ -109,14 +144,7 @@ const CustomizePcs = () => {
   const tabsData = brands.map((brand, index) => {
     const sub = brand.sub_categories.find((s) => s.name === selectedDevice);
     const subId = sub?.id;
-    let items = productsMap[subId] || [];
-
-    if (searchTerm.trim()) {
-      const search = searchTerm.toLowerCase();
-      items = items.filter((item) =>
-        item?.title?.toLowerCase().includes(search)
-      );
-    }
+    const items = filteredProductsMap[subId] || [];
 
     const currentPage = currentPages[brand.name] || 1;
     const totalPages = Math.ceil(items.length / pageSize);
@@ -139,7 +167,7 @@ const CustomizePcs = () => {
                   <ProductCard
                     image={
                       product.images?.[0]?.url ||
-                      "https://via.placeholder.com/300x300?text=No+Image"
+                      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXxZR0_1ISIJx_T4oB5-5OJVSNgSMFLe8eCw&s"
                     }
                     showTitle={true}
                     title={product.title}
@@ -162,9 +190,8 @@ const CustomizePcs = () => {
                 {Array.from({ length: totalPages }, (_, i) => (
                   <li
                     key={i}
-                    className={`page-item ${
-                      currentPage === i + 1 ? "active" : ""
-                    }`}
+                    className={`page-item ${currentPage === i + 1 ? "active" : ""
+                      }`}
                   >
                     <button
                       className="page-link"
@@ -186,6 +213,7 @@ const CustomizePcs = () => {
       ),
     };
   });
+
 
   const selectedBrand = brands[selectedBrandIndex];
   const devices = selectedBrand?.sub_categories?.map((sub) => sub.name) || [];

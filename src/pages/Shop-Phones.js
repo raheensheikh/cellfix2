@@ -169,7 +169,7 @@ const ShopPhones = () => {
                 <ProductCard
                   image={
                     product.images?.[0]?.url ||
-                    "https://via.placeholder.com/300x300?text=No+Image"
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXxZR0_1ISIJx_T4oB5-5OJVSNgSMFLe8eCw&s"
                   }
                   showTitle={true}
                   title={product.title}
