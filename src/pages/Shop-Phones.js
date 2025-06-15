@@ -32,9 +32,25 @@ const ShopPhones = () => {
   const [brandToSubIdMap, setBrandToSubIdMap] = useState({});
   const [currentPages, setCurrentPages] = useState({});
   const pageSize = 12;
-  const paginate = (items = [], currentPage = 1, pageSize = pageSize) => {
-    const startIndex = (currentPage - 1) * pageSize;
-    return items.slice(startIndex, startIndex + pageSize);
+
+  const paginate = (items = [], currentPage = 1, size = 12) => {
+    const startIndex = (currentPage - 1) * size;
+    return items.slice(startIndex, startIndex + size);
+  };
+
+  const handlePageChange = (brand, page) => {
+    setCurrentPages((prev) => ({
+      ...prev,
+      [brand]: page,
+    }));
+
+    setProductsByBrand((prev) => {
+      const updated = { ...prev };
+      if (updated[brand]) {
+        updated[brand].paginated = paginate(updated[brand].items, page);
+      }
+      return updated;
+    });
   };
 
   const getProducts = async () => {
@@ -50,9 +66,15 @@ const ShopPhones = () => {
     if (response) {
       const products = response.data.response.data;
       const grouped = groupByBrand(products);
-      console.log('sdffsdf',grouped)
       setAllProductsByBrand(grouped);
       setProductsByBrand(grouped);
+
+      const pages = {};
+      Object.keys(grouped).forEach((brand) => {
+        pages[brand] = 1;
+      });
+      setCurrentPages(pages);
+
       const subcategoryMap = extractSubcategoryMap(products);
       setBrandToSubIdMap(subcategoryMap);
     } else {
@@ -63,10 +85,8 @@ const ShopPhones = () => {
   const extractSubcategoryMap = (products) => {
     const map = {};
     products.forEach((product) => {
-
       const brand = product.sub_category?.name;
       const subId = product.sub_category?.id;
-      console.log("opr", brand, subId)
       if (brand && subId && !map[brand]) {
         map[brand] = subId;
       }
@@ -74,7 +94,6 @@ const ShopPhones = () => {
     return map;
   };
 
-  // 🔍 Fetch filtered products on search
   const handleSearch = async () => {
     if (!searchTerm.trim()) {
       setProductsByBrand(allProductsByBrand);
@@ -82,7 +101,6 @@ const ShopPhones = () => {
     }
 
     const subcategoryId = brandToSubIdMap[activeBrand];
-    console.log('subcategoryId', activeBrand)
 
     const { response, error } = await apiHelper(
       "GET",
@@ -103,15 +121,23 @@ const ShopPhones = () => {
     const grouped = {};
 
     Object.keys(referenceBrands).forEach((brand) => {
-      grouped[brand] = { items: [] };
+      grouped[brand] = { items: [], paginated: [], total: 0 };
     });
 
     products.forEach((product) => {
       const brand = product.sub_category?.name || "Others";
       if (!grouped[brand]) {
-        grouped[brand] = { items: [] };
+        grouped[brand] = { items: [], paginated: [], total: 0 };
       }
       grouped[brand].items.push(product);
+    });
+
+    Object.keys(grouped).forEach((brand) => {
+      grouped[brand].total = grouped[brand].items.length;
+      grouped[brand].paginated = paginate(
+        grouped[brand].items,
+        currentPages[brand] || 1
+      );
     });
 
     return grouped;
@@ -122,7 +148,7 @@ const ShopPhones = () => {
     const body = { product_id: product?.id };
     const { response, error } = await apiHelper("POST", "cart/add", {}, body);
     if (response) {
-      dispatch(incrementQuantity())
+      dispatch(incrementQuantity());
     } else {
       toast.error(error);
     }
@@ -133,8 +159,8 @@ const ShopPhones = () => {
     const body = { product_id: product?.id };
     const { response, error } = await apiHelper("POST", "cart/add", {}, body);
     if (response) {
-      dispatch(incrementQuantity())
-      navigate('/checkout')
+      dispatch(incrementQuantity());
+      navigate("/checkout");
     } else {
       toast.error(error);
     }
@@ -154,17 +180,21 @@ const ShopPhones = () => {
 
   const tabs = Object.entries(productsByBrand).map(([brand, data]) => ({
     eventKey: brand.toLowerCase().replace(/\s+/g, "-"),
-    image: brandImages[brand.split(' ')[0]] || "https://via.placeholder.com/50",
+    image: brandImages[brand.split(" ")[0]] || "https://via.placeholder.com/50",
     content: (
       <>
-        <SearchField searchTerm={searchTerm} setSearchTerm={setSearchTerm} onSearch={() => console.log(searchTerm)} />
+        <SearchField
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          onSearch={() => console.log(searchTerm)}
+        />
         <Row>
-          {data.items.length === 0 ? (
+          {data.paginated.length === 0 ? (
             <Col>
               <p className="text-muted">No products found.</p>
             </Col>
           ) : (
-            data.items.map((product) => (
+            data.paginated.map((product) => (
               <Col key={product.id} lg={4} md={4} sm={6} xs={6}>
                 <ProductCard
                   image={
@@ -188,6 +218,28 @@ const ShopPhones = () => {
             ))
           )}
         </Row>
+        {data.total > pageSize && (
+          <div className="d-flex justify-content-center mt-4">
+            <nav>
+              <ul className="pagination">
+                {Array.from(
+                  { length: Math.ceil(data.total / pageSize) },
+                  (_, idx) => (
+                    <li
+                      key={idx}
+                      className={`page-item ${
+                        currentPages[brand] === idx + 1 ? "active" : ""
+                      }`}
+                      onClick={() => handlePageChange(brand, idx + 1)}
+                    >
+                      <button className="page-link">{idx + 1}</button>
+                    </li>
+                  )
+                )}
+              </ul>
+            </nav>
+          </div>
+        )}
       </>
     ),
   }));
@@ -199,14 +251,20 @@ const ShopPhones = () => {
       <h2 className="heading">
         Shop the best products from your favorite brands!
       </h2>
-      <Container>{!loading && <DynamicTabs tabsData={tabs}
-        onTabChange={(key) => {
-          const brandName = Object.keys(productsByBrand).find(
-            brand => brand.toLowerCase().replace(/\s+/g, "-") === key
-          );
-          setActiveBrand(brandName);
-        }}
-      />}</Container>
+      <Container>
+        {!loading && (
+          <DynamicTabs
+            tabsData={tabs}
+            onTabChange={(key) => {
+              const brandName = Object.keys(productsByBrand).find(
+                (brand) => brand.toLowerCase().replace(/\s+/g, "-") === key
+              );
+              setActiveBrand(brandName);
+              setCurrentPages((prev) => ({ ...prev, [brandName]: 1 }));
+            }}
+          />
+        )}
+      </Container>
     </Layout>
   );
 };

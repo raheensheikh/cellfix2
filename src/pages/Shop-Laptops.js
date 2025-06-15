@@ -23,6 +23,13 @@ const brandImages = {
 const ShopLaptop = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const [allProductsByBrand, setAllProductsByBrand] = useState({});
+  const [filteredProductsByBrand, setFilteredProductsByBrand] = useState({});
+  const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [activeBrand, setActiveBrand] = useState("LG");
+  const [brandToSubIdMap, setBrandToSubIdMap] = useState({});
   const [currentPages, setCurrentPages] = useState({});
   const pageSize = 12;
 
@@ -30,11 +37,6 @@ const ShopLaptop = () => {
     const startIndex = (pageNumber - 1) * pageSize;
     return items.slice(startIndex, startIndex + pageSize);
   };
-
-  const [allProductsByBrand, setAllProductsByBrand] = useState({});
-  const [filteredProductsByBrand, setFilteredProductsByBrand] = useState({});
-  const [searchTerm, setSearchTerm] = useState("");
-  const [loading, setLoading] = useState(false);
 
   const getProducts = async () => {
     setLoading(true);
@@ -46,13 +48,19 @@ const ShopLaptop = () => {
     if (response) {
       const products = response.data.response.data;
       const grouped = {};
+      const map = {};
       products.forEach((product) => {
         const brand = product.sub_category?.name || "Others";
+        const subId = product.sub_category?.id;
         if (!grouped[brand]) grouped[brand] = { items: [] };
         grouped[brand].items.push(product);
+        if (brand && subId && !map[brand]) {
+          map[brand] = subId;
+        }
       });
       setAllProductsByBrand(grouped);
       setFilteredProductsByBrand(grouped);
+      setBrandToSubIdMap(map);
     } else {
       toast.error(error);
     }
@@ -64,20 +72,30 @@ const ShopLaptop = () => {
       return;
     }
 
+    const subcategoryId = brandToSubIdMap[activeBrand];
+    if (!subcategoryId) return;
+
     setLoading(true);
     const { response, error } = await apiHelper(
       "GET",
-      `products/search?subcategory_id=16&search=${query}`
+      `products/search?subcategory_id=${subcategoryId}&search=${query}`
     );
     setLoading(false);
+
     if (response) {
       const products = response.data.response.data;
       const grouped = {};
+
+      Object.keys(allProductsByBrand).forEach((brand) => {
+        grouped[brand] = { items: [] };
+      });
+
       products.forEach((product) => {
         const brand = product.sub_category?.name || "Others";
         if (!grouped[brand]) grouped[brand] = { items: [] };
         grouped[brand].items.push(product);
       });
+
       setFilteredProductsByBrand(grouped);
     } else {
       toast.error(error);
@@ -87,24 +105,24 @@ const ShopLaptop = () => {
   useEffect(() => {
     getProducts();
   }, []);
-  const handleAddToCart = async (product) => {
-    dispatch(addToCart(product));
-    const body = {
-      product_id: product?.id,
-    };
-    const { response, error } = await apiHelper("POST", "cart/add", {}, body);
-    if (response) {
-      console.log(response.data.data);
-    } else {
-      toast.error(error);
-    }
-  };
+
   useEffect(() => {
     const timeout = setTimeout(() => {
       searchProducts(searchTerm);
     }, 400);
     return () => clearTimeout(timeout);
   }, [searchTerm]);
+
+  const handleAddToCart = async (product) => {
+    dispatch(addToCart(product));
+    const body = {
+      product_id: product?.id,
+    };
+    const { response, error } = await apiHelper("POST", "cart/add", {}, body);
+    if (!response) {
+      toast.error(error);
+    }
+  };
 
   const tabs = Object.entries(filteredProductsByBrand).map(([brand, data]) => {
     const currentPage = currentPages[brand] || 1;
@@ -186,7 +204,19 @@ const ShopLaptop = () => {
       <h2 className="heading">
         Shop the best products from your favorite brands!
       </h2>
-      <Container>{!loading && <DynamicTabs tabsData={tabs} />}</Container>
+      <Container>
+        {!loading && (
+          <DynamicTabs
+            tabsData={tabs}
+            onTabChange={(key) => {
+              const brandName = Object.keys(filteredProductsByBrand).find(
+                (brand) => brand.toLowerCase().replace(/\s+/g, "-") === key
+              );
+              setActiveBrand(brandName);
+            }}
+          />
+        )}
+      </Container>
     </Layout>
   );
 };
