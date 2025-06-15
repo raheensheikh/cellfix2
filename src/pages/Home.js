@@ -855,49 +855,49 @@ const Home = () => {
           </Container>
           <div className="border-bottom mx-5 my-5"></div>
         </section>
-        <section className="services m-3">
-          <Services
-            image={images.service1}
-            heading="Same Day Repairs"
-            title="Expert Repair, Fast Service"
-            description="With our extensive expertise, we deliver high-quality repairs 
-          with impressive speed. Many issues can be fixed on the same day, often while you wait. Understanding 
-          the inconvenience of a broken device, we prioritize quick fixes to get you back up and running as soon as possible."
-            buttonText="Start a Repair"
-            reverseRow={false}
-            showBtn={false}
-            btnClick={() => navigate("/repair")}
-          />
-        </section>
-        <section className="services m-3">
-          <Services
-            image={images.service2}
-            heading="Authentic Apple ® Parts Now Offered at CellNet"
-            description="Cellnet provides iPhone repairs using only genuine Apple parts, 
-              diagnostic software, and specialized tools to ensure your device 
-              is repaired with precision and safety. Ask our store associates 
-              about the availability of authentic Apple parts for your repair 
-              needs."
-            buttonText="Start iphone repair"
-            reverseRow={true}
-            showBtn={false}
-            btnClick={() => navigate("/repair")}
-          />
-        </section>
-        <section className="services m-3">
-          <Services
-            image={images.service3}
-            heading="Genuine Samsung Parts, Reliable Service"
-            description="As an authorized Samsung Service Provider, Cellnet Cell Phone 
-              Repair ensures the use of genuine parts for select Samsung 
-              repairs. Our certified technicians are committed to restoring 
-              your device with OEM parts, advanced tools, and proven 
-              techniques, all while delivering fast, dependable service"
-            buttonText="Start Samsung repair"
-            reverseRow={false}
-            showBtn={false}
-          />
-        </section>
+          <section className="services m-3">
+            <Services
+              image={images.service1}
+              heading="Same Day Repairs"
+              title="Expert Repair, Fast Service"
+              description="With our extensive expertise, we deliver high-quality repairs 
+            with impressive speed. Many issues can be fixed on the same day, often while you wait. Understanding 
+            the inconvenience of a broken device, we prioritize quick fixes to get you back up and running as soon as possible."
+              buttonText="Start a Repair"
+              reverseRow={false}
+              showBtn={false}
+              btnClick={() => navigate("/repair")}
+            />
+          </section>
+          <section className="services m-3">
+            <Services
+              image={images.service2}
+              heading="Authentic Apple ® Parts Now Offered at CellNet"
+              description="Cellnet provides iPhone repairs using only genuine Apple parts, 
+                diagnostic software, and specialized tools to ensure your device 
+                is repaired with precision and safety. Ask our store associates 
+                about the availability of authentic Apple parts for your repair 
+                needs."
+              buttonText="Start iphone repair"
+              reverseRow={true}
+              showBtn={false}
+              btnClick={() => navigate("/repair")}
+            />
+          </section>
+          <section className="services m-3">
+            <Services
+              image={images.service3}
+              heading="Genuine Samsung Parts, Reliable Service"
+              description="As an authorized Samsung Service Provider, Cellnet Cell Phone 
+                Repair ensures the use of genuine parts for select Samsung 
+                repairs. Our certified technicians are committed to restoring 
+                your device with OEM parts, advanced tools, and proven 
+                techniques, all while delivering fast, dependable service"
+              buttonText="Start Samsung repair"
+              reverseRow={false}
+              showBtn={false}
+            />
+          </section>
         <section className="locationSection m-3">
           <Container>
             <h1 className="heading text-start">Find our stores in houston</h1>

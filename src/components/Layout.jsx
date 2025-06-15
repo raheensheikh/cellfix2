@@ -369,8 +369,8 @@ const Layout = ({
             </div>
             {repairOpen && (
               <div className="dropdown-menu">
-                <Link to="/online-repair" className="dropdown-item">
-                  Online Repair
+                <Link to="/mail-in-repair" className="dropdown-item">
+                  Mail in Repair
                 </Link>
                 {/* <Link to="/" className="dropdown-item">
                   Repair On Store
@@ -379,7 +379,7 @@ const Layout = ({
                   to={`/repair?id=8`}
                   className="dropdown-item"
                 >
-                  Repair On Store
+                 Walk in Repair
                 </Link>
               </div>
             )}

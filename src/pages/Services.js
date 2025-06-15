@@ -39,7 +39,7 @@ const Services = () => {
   ];
   const brands2 = [
     { id: "apple", img: images.apple, alt: "Apple Logo" },
-    { id: "google", img: images.google, alt: "Google Logo" },
+    // { id: "google", img: images.google, alt: "Google Logo" },
     { id: "samsung", img: images.samsung, alt: "Samsung Logo" },
     { id: "oneplus", img: images.oneplus, alt: "OnePlus Logo" },
     { id: "motorola", img: images.motorola, alt: "Motorola Logo" },
@@ -60,7 +60,7 @@ const Services = () => {
               brands={brands}
               imagePath={images.unlock1}
               buttonText="Get Quote"
-              buttonRoute={() => navigate("/contact-us")}
+              buttonRoute={() => navigate("/nearest-store")}
             />
             <Unlock
               heading="Google Lock Removal"
@@ -69,7 +69,7 @@ const Services = () => {
               brands={brands2}
               imagePath={images.unlock2}
               buttonText="Get Quote"
-              buttonRoute={() => navigate("/contact-us")}
+              buttonRoute={() => navigate("/nearest-store")}
             />
             <Unlock
               heading="Bill Payments"
@@ -78,7 +78,7 @@ const Services = () => {
               brands={brands3}
               imagePath={images.unlock3}
               buttonText="Get Quote"
-              buttonRoute={() => navigate("/contact-us")}
+              buttonRoute={() => navigate("/nearest-store")}
             />
           </Container>
         </section>

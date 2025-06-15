@@ -488,6 +488,7 @@ footer .heading {
 .locationBox_content .addresss {
   color: #fff;
   font-size: 25px;
+  text-transform: capitalize;
 }
 .allStores {
   display: flex;
