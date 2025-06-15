@@ -139,9 +139,10 @@ const Layout = ({
     e.preventDefault();
 
     const device_type = "android"; // or "browser"
-    const device_token =
-      localStorage.getItem("device_token") || crypto.randomUUID();
-    localStorage.setItem("device_token", device_token);
+    // const device_token =
+    //   localStorage.getItem("device_token") || crypto.randomUUID();
+    // localStorage.setItem("device_token", device_token);
+    const device_token = 'abcd123'
 
     const { response, error } = await apiHelper(
       "POST",
@@ -374,14 +375,12 @@ const Layout = ({
                 {/* <Link to="/" className="dropdown-item">
                   Repair On Store
                 </Link> */}
-                <a
-                  href={`/repair?id=8`}
+                <Link
+                  to={`/repair?id=8`}
                   className="dropdown-item"
-                  target="_blank"
-                  rel="noopener noreferrer"
                 >
                   Repair On Store
-                </a>
+                </Link>
               </div>
             )}
           </div>

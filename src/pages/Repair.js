@@ -237,6 +237,7 @@ const Repair = () => {
 
       if (response?.status) {
         toast.success("Repair request submitted successfully.");
+        navigate('/nearest-store')
       } else {
         toast.error(response?.message || "Something went wrong.");
       }

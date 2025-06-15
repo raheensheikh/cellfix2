@@ -25,7 +25,7 @@ import Profile from "./pages/Profile";
 function App() {
   return (
     <>
-      <Router>
+      <Router basename="/cellfix4u">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/repair" element={<Repair />} />
