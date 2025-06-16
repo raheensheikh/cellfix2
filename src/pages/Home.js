@@ -503,10 +503,10 @@ const Home = () => {
             mousewheel={true}
             keyboard={true}
             modules={[Pagination, Mousewheel, Keyboard, Autoplay]}
-            autoplay={{
-              delay: 3000, // 3 seconds
-              disableOnInteraction: false,
-            }}
+            // autoplay={{
+            //   delay: 3000, // 3 seconds
+            //   disableOnInteraction: false,
+            // }}
             className="mySwiper"
           >
             <SwiperSlide>

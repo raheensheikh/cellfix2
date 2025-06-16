@@ -142,7 +142,7 @@ const Layout = ({
     // const device_token =
     //   localStorage.getItem("device_token") || crypto.randomUUID();
     // localStorage.setItem("device_token", device_token);
-    const device_token = 'abcd123'
+    const device_token = "abcd123";
 
     const { response, error } = await apiHelper(
       "POST",
@@ -187,6 +187,8 @@ const Layout = ({
       setUserId(response.data.response.data.user_id);
       setModalOpen2(false);
       setModalOpen3(true);
+      setLoginModalOpen(false);
+
       setPrevFrom("signup");
     } else {
       toast.error(error[0]);
@@ -211,7 +213,7 @@ const Layout = ({
       // optionally: clear auth tokens, user context, etc.
       toast.success("Logged out successfully");
       navigate("/"); // redirect to home or login page
-      dispatch(clearCart())
+      dispatch(clearCart());
     } else {
       toast.error(error || "Failed to logout");
     }
@@ -236,6 +238,7 @@ const Layout = ({
         dispatch(setUser(response.data.response.data.user));
         dispatch(setToken(response.data.response.data.token));
         setModalOpen3(false);
+        setLoginModalOpen(false);
       }
       if (prevFrom === "signup") {
         setModalOpen3(false);
@@ -243,6 +246,13 @@ const Layout = ({
       }
     } else {
       toast.error(error);
+    }
+    if (prevFrom === "signup") {
+      setModalOpen3(false);
+      setEmail(""); // clear email
+      setPassword(""); // clear password
+      setOtp(["", "", "", "", "", ""]); // Clear OTP
+      setLoginModalOpen(true);
     }
   };
   const handleKeyDown = (e, index) => {
@@ -375,11 +385,8 @@ const Layout = ({
                 {/* <Link to="/" className="dropdown-item">
                   Repair On Store
                 </Link> */}
-                <Link
-                  to={`/repair?id=8`}
-                  className="dropdown-item"
-                >
-                 Walk in Repair
+                <Link to={`/repair?id=8`} className="dropdown-item">
+                  Walk in Repair
                 </Link>
               </div>
             )}
@@ -509,10 +516,29 @@ const Layout = ({
               <FontAwesomeIcon icon={faUser} size="lg" />
             </button>
 
-            {showProfileDropdown && (
+            {/* {showProfileDropdown && (
               <div className="profile-dropdown">
                 <div onClick={() => navigate("/profile")}>Profile</div>
                 <div onClick={handleLogout}>Logout</div>
+              </div>
+            )} */}
+            {showProfileDropdown && (
+              <div className="profile-dropdown">
+                {token ? (
+                  <>
+                    <div onClick={() => navigate("/profile")}>Profile</div>
+                    <div onClick={handleLogout}>Logout</div>
+                  </>
+                ) : (
+                  <div
+                    onClick={() => {
+                      setLoginModalOpen(true); // 👈 modal open trigger
+                      setShowProfileDropdown(false); // 👈 dropdown close
+                    }}
+                  >
+                    Login
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -577,7 +603,11 @@ const Layout = ({
         {/* LOGIN MODAL */}
         <Modal
           isOpen={loginModalOpen}
-          onClose={() => setLoginModalOpen(false)}
+          onClose={() => {
+            setLoginModalOpen(false);
+            setEmail("");
+            setPassword("");
+          }}
           showHeader={true}
           heading="Login"
         >
@@ -696,7 +726,10 @@ const Layout = ({
         {/* OTP VERIFICATION MODAL */}
         <Modal
           isOpen={isModalOpen3}
-          onClose={() => setModalOpen3(false)}
+          onClose={() => {
+            setModalOpen3(false);
+            setOtp(["", "", "", "", "", ""]); // Clear OTP
+          }}
           showHeader={true}
           heading="Verify Email"
         >
