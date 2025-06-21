@@ -8,7 +8,13 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { Navigation, Pagination, Mousewheel, Keyboard, Autoplay } from "swiper/modules";
+import {
+  Navigation,
+  Pagination,
+  Mousewheel,
+  Keyboard,
+  Autoplay,
+} from "swiper/modules";
 import Specialities from "../components/Specialities";
 import ProductCard from "../components/ProductCard.jsx";
 import GlobalButton from "../components/GlobalButton.jsx";
@@ -60,7 +66,9 @@ const Home = () => {
   const [loading, setLoading] = useState(false);
   const [location, setLocation] = useState([]);
   const [isModalContact, setModalContact] = useState(false);
-  const [selectedStoreId, setSelectedStoreId] = useState(null);
+  // const [selectedStoreId, setSelectedStoreId] = useState(null);
+  const [selectedStore, setSelectedStore] = useState(null);
+
   const [isStoreModal, setStoreModal] = useState(false);
 
   const { token, user, isLogin } = useSelector((state) => state.user);
@@ -121,7 +129,15 @@ const Home = () => {
       setPrevFrom("login");
       setUserId(response.data.response.data.user_id);
     } else {
-      toast.error(error);
+      const status = error?.response?.status;
+      const message =
+        status === 401
+          ? "Invalid email or password."
+          : status === 403
+          ? "Access denied. Contact support."
+          : "Login failed. Please try again.";
+
+      toast.error(message);
     }
   };
   const SignUp = async (e) => {
@@ -290,7 +306,7 @@ const Home = () => {
     if (response) {
       console.log(response.data.data);
       dispatch(incrementQuantity());
-      navigate("/checkout")
+      navigate("/checkout");
     } else {
       toast.error(error);
     }
@@ -306,7 +322,7 @@ const Home = () => {
     );
     if (response) {
       setLoading(false);
-      console.log(response.data.response);
+      console.log("phoneparts", response.data.response.data);
       setPhoneParts(response.data.response.data);
     } else {
       setLoading(false);
@@ -608,7 +624,7 @@ const Home = () => {
                 phoneParts.slice(0, 4).map((item, index) => (
                   <Col key={index} lg={3} md={4} sm={6} xs={6}>
                     <ProductCard
-                      image={item.image || images.parts2}
+                      image={item?.images[0]?.image_path || images.parts2}
                       showTitle={true}
                       title={item.title}
                       btn1Text="Buy Now"
@@ -651,7 +667,7 @@ const Home = () => {
                 phones.slice(0, 4).map((item, index) => (
                   <Col key={index} lg={3} md={4} sm={6} xs={6}>
                     <ProductCard
-                      image={item.image || images.smartphone1}
+                      image={item?.images[0]?.image_path || images.smartphone1}
                       showTitle={true}
                       title={item.title}
                       btn1Text="Buy Now"
@@ -694,7 +710,7 @@ const Home = () => {
                 watches.slice(0, 4).map((item, index) => (
                   <Col key={index} lg={3} md={4} sm={6} xs={6}>
                     <ProductCard
-                      image={item.image || images.smartwatch1}
+                      image={item?.images[0]?.image_path || images.smartwatch1}
                       showTitle={true}
                       title={item.title}
                       btn1Text="Buy Now"
@@ -737,7 +753,7 @@ const Home = () => {
                 laptops.slice(0, 4).map((item, index) => (
                   <Col key={index} lg={3} md={4} sm={6} xs={6}>
                     <ProductCard
-                      image={item.image || images.laptop1}
+                      image={item?.images[0]?.image_path || images.laptop1}
                       showTitle={true}
                       title={item.title}
                       btn1Text="Buy Now"
@@ -780,7 +796,7 @@ const Home = () => {
                 tablets.slice(0, 4).map((item, index) => (
                   <Col key={index} lg={3} md={4} sm={6} xs={6}>
                     <ProductCard
-                      image={item.image || images.tab1}
+                      image={item?.images[0]?.image_path || images.tab1}
                       showTitle={true}
                       title={item.title}
                       btn1Text="Buy Now"
@@ -823,7 +839,7 @@ const Home = () => {
                 consoles.slice(0, 4).map((item, index) => (
                   <Col key={index} lg={3} md={4} sm={6} xs={6}>
                     <ProductCard
-                      image={item.image || images.tab1}
+                      image={item?.images[0]?.image_path || images.tab1}
                       showTitle={true}
                       title={item.title}
                       btn1Text="Buy Now"
@@ -834,6 +850,8 @@ const Home = () => {
                       btn2Click={() => handleAddToCart(item)}
                       btn1Click={() => handleBuyNow(item)}
                       onClick={() => navigate(`/details/${item.id}`)}
+                      price={item.price}
+                      showPrice={true}
                     />
                   </Col>
                 ))
@@ -855,49 +873,49 @@ const Home = () => {
           </Container>
           <div className="border-bottom mx-5 my-5"></div>
         </section>
-          <section className="services m-3">
-            <Services
-              image={images.service1}
-              heading="Same Day Repairs"
-              title="Expert Repair, Fast Service"
-              description="With our extensive expertise, we deliver high-quality repairs 
+        <section className="services m-3">
+          <Services
+            image={images.service1}
+            heading="Same Day Repairs"
+            title="Expert Repair, Fast Service"
+            description="With our extensive expertise, we deliver high-quality repairs 
             with impressive speed. Many issues can be fixed on the same day, often while you wait. Understanding 
             the inconvenience of a broken device, we prioritize quick fixes to get you back up and running as soon as possible."
-              buttonText="Start a Repair"
-              reverseRow={false}
-              showBtn={false}
-              btnClick={() => navigate("/repair")}
-            />
-          </section>
-          <section className="services m-3">
-            <Services
-              image={images.service2}
-              heading="Authentic Apple ® Parts Now Offered at CellNet"
-              description="Cellnet provides iPhone repairs using only genuine Apple parts, 
+            buttonText="Start a Repair"
+            reverseRow={false}
+            showBtn={false}
+            btnClick={() => navigate("/repair")}
+          />
+        </section>
+        <section className="services m-3">
+          <Services
+            image={images.service2}
+            heading="Authentic Apple ® Parts Now Offered at CellNet"
+            description="Cellnet provides iPhone repairs using only genuine Apple parts, 
                 diagnostic software, and specialized tools to ensure your device 
                 is repaired with precision and safety. Ask our store associates 
                 about the availability of authentic Apple parts for your repair 
                 needs."
-              buttonText="Start iphone repair"
-              reverseRow={true}
-              showBtn={false}
-              btnClick={() => navigate("/repair")}
-            />
-          </section>
-          <section className="services m-3">
-            <Services
-              image={images.service3}
-              heading="Genuine Samsung Parts, Reliable Service"
-              description="As an authorized Samsung Service Provider, Cellnet Cell Phone 
+            buttonText="Start iphone repair"
+            reverseRow={true}
+            showBtn={false}
+            btnClick={() => navigate("/repair")}
+          />
+        </section>
+        <section className="services m-3">
+          <Services
+            image={images.service3}
+            heading="Genuine Samsung Parts, Reliable Service"
+            description="As an authorized Samsung Service Provider, Cellnet Cell Phone 
                 Repair ensures the use of genuine parts for select Samsung 
                 repairs. Our certified technicians are committed to restoring 
                 your device with OEM parts, advanced tools, and proven 
                 techniques, all while delivering fast, dependable service"
-              buttonText="Start Samsung repair"
-              reverseRow={false}
-              showBtn={false}
-            />
-          </section>
+            buttonText="Start Samsung repair"
+            reverseRow={false}
+            showBtn={false}
+          />
+        </section>
         <section className="locationSection m-3">
           <Container>
             <h1 className="heading text-start">Find our stores in houston</h1>
@@ -911,7 +929,7 @@ const Home = () => {
                     address={`${store.address} ${store.zipcode}`}
                     onMapClick={() => handleMapClick(store.google_maps_link)}
                     onCallClick={() => {
-                      setSelectedStoreId(store.id);
+                      setSelectedStore(store);
                       setStoreModal(true);
                     }}
                   />
@@ -1182,24 +1200,22 @@ const Home = () => {
           isOpen={isStoreModal}
           onClose={() => {
             setStoreModal(false);
-            setSelectedStoreId(null);
+            setSelectedStore(null);
           }}
           showHeader={true}
           heading="Store Contact"
         >
-          {selectedStoreId && storeContactInfo[selectedStoreId] ? (
+          {selectedStore ? (
             <div className="contactNumbers">
-              <p className="title">{storeContactInfo[selectedStoreId].name}</p>
+              <p className="title">{selectedStore.name}</p>
               <p className="para">
-                {storeContactInfo[selectedStoreId].address}
+                {selectedStore.address} {selectedStore.zipcode}
               </p>
               <p
                 className="number"
-                onClick={() =>
-                  handleCallClick(storeContactInfo[selectedStoreId].phone)
-                }
+                onClick={() => handleCallClick(selectedStore.phone)}
               >
-                {storeContactInfo[selectedStoreId].phone}
+                {selectedStore.phone || "N/A"}
               </p>
             </div>
           ) : (

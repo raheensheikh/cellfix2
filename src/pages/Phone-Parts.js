@@ -22,7 +22,6 @@ const brandImages = {
   Others: "https://via.placeholder.com/50?text=Others",
 };
 
-
 const PhoneParts = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -42,8 +41,7 @@ const PhoneParts = () => {
   const [allSubSubCategories, setAllSubSubCategories] = useState([]);
   const [selectedDevice, setSelectedDevice] = useState("");
   const [brandToSubIdMap, setBrandToSubIdMap] = useState({});
-const [activeBrand, setActiveBrand] = useState("");
-
+  const [activeBrand, setActiveBrand] = useState("");
 
   const groupByBrand = (products, referenceBrands = {}) => {
     const grouped = {};
@@ -83,15 +81,14 @@ const [activeBrand, setActiveBrand] = useState("");
       ];
 
       const brandToSubIdMap = {};
-parts.forEach((product) => {
-  const brand = product.sub_category?.name || "Others";
-  const subId = product.sub_category?.id;
-  if (brand && subId && !brandToSubIdMap[brand]) {
-    brandToSubIdMap[brand] = subId;
-  }
-});
-setBrandToSubIdMap(brandToSubIdMap);
-
+      parts.forEach((product) => {
+        const brand = product.sub_category?.name || "Others";
+        const subId = product.sub_category?.id;
+        if (brand && subId && !brandToSubIdMap[brand]) {
+          brandToSubIdMap[brand] = subId;
+        }
+      });
+      setBrandToSubIdMap(brandToSubIdMap);
 
       setAllSubSubCategories(uniqueDevices);
 
@@ -124,18 +121,18 @@ setBrandToSubIdMap(brandToSubIdMap);
       setPartsByBrand(allPartsByBrand);
       return;
     }
-  
+
     const subcategoryId = brandToSubIdMap[activeBrand];
     if (!subcategoryId) {
       toast.warn("Subcategory not found for selected brand.");
       return;
     }
-  
+
     const { response, error } = await apiHelper(
       "GET",
       `products/search?subcategory_id=${subcategoryId}&search=${searchTerm.trim()}`
     );
-  
+
     if (response) {
       const searched = response.data.response.data.filter(
         (item) => item.sub_sub_category?.name === selectedDevice
@@ -146,8 +143,6 @@ setBrandToSubIdMap(brandToSubIdMap);
       toast.error(error);
     }
   };
-  
-  
 
   useEffect(() => {
     const debounce = setTimeout(() => {
@@ -183,11 +178,7 @@ setBrandToSubIdMap(brandToSubIdMap);
               paginatedItems.map((item) => (
                 <Col key={item.id} lg={4} md={4} sm={6} xs={6}>
                   <ProductCard
-                    image={
-                      item.images?.[0]?.url ||
-                      images.parts2 || 
-                      "https://via.placeholder.com/300x300?text=No+Image"
-                    }
+                    image={item?.images[0]?.image_path || images.smartphone1}
                     showTitle={true}
                     title={item.title}
                     btn1Text="Buy Now"
@@ -198,6 +189,8 @@ setBrandToSubIdMap(brandToSubIdMap);
                     btn2Click={() => handleAddToCart(item)}
                     btn1Click={() => navigate("/checkout")}
                     onClick={() => navigate(`/details/${item.id}`)}
+                    showPrice={true}
+                    price={item.price}
                   />
                 </Col>
               ))
@@ -253,16 +246,17 @@ setBrandToSubIdMap(brandToSubIdMap);
               {loading ? (
                 <div className="text-center py-5">Loading parts...</div>
               ) : (
-                <DynamicTabs tabsData={tabs} 
-                onTabChange={(key) => {
-                  const brand = Object.keys(partsByBrand).find(
-                    (b) => b.toLowerCase().replace(/\s+/g, "-") === key
-                  );
-                  if (brand) {
-                    setActiveBrand(brand);
-                    setSearchTerm("");
-                  }
-                }}
+                <DynamicTabs
+                  tabsData={tabs}
+                  onTabChange={(key) => {
+                    const brand = Object.keys(partsByBrand).find(
+                      (b) => b.toLowerCase().replace(/\s+/g, "-") === key
+                    );
+                    if (brand) {
+                      setActiveBrand(brand);
+                      setSearchTerm("");
+                    }
+                  }}
                 />
               )}
             </Col>

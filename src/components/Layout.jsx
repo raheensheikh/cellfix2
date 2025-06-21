@@ -354,245 +354,256 @@ const Layout = ({
   return (
     <div className="layout-wrapper">
       {/* Header */}
-      <header className="header d_flexBetween">
-        <div className="header-left d_flex">
-          {/* <img src={images.logo} alt="Logo" className="logo" /> */}
-          <Link to="/" className="logo-link">
-            <Image src={images.logo} alt="Logo" className="logo" />
-          </Link>
-          <button className="burger" onClick={() => setMenuOpen(!menuOpen)}>
-            <FontAwesomeIcon icon={faBars} />
-          </button>
-        </div>
 
-        <nav className={`navbar ${menuOpen ? "open" : ""}`}>
-          <Link to="/" className={`nav-link ${isActive("/") ? "active" : ""}`}>
-            Home
-          </Link>
+      <header>
+        <div className="header d_flexBetween">
+          <div className="header-left d_flex">
+            {/* <img src={images.logo} alt="Logo" className="logo" /> */}
+            <Link to="/" className="logo-link">
+              <Image src={images.logo} alt="Logo" className="logo" />
+            </Link>
+            <button className="burger" onClick={() => setMenuOpen(!menuOpen)}>
+              <FontAwesomeIcon icon={faBars} />
+            </button>
+          </div>
 
-          <div className={`nav-link dropdown ${repairOpen ? "active" : ""}`}>
-            <div
-              onClick={() => setRepairOpen(!repairOpen)}
-              className="dropdown-toggle"
+          <nav className={`navbar ${menuOpen ? "open" : ""}`}>
+            <Link
+              to="/"
+              className={`nav-link ${isActive("/") ? "active" : ""}`}
             >
-              Repair
-            </div>
-            {repairOpen && (
-              <div className="dropdown-menu">
-                <Link to="/mail-in-repair" className="dropdown-item">
-                  Mail in Repair
-                </Link>
-                {/* <Link to="/" className="dropdown-item">
+              Home
+            </Link>
+
+            <div className={`nav-link dropdown ${repairOpen ? "active" : ""}`}>
+              <div
+                onClick={() => setRepairOpen(!repairOpen)}
+                className="dropdown-toggle"
+              >
+                Repair
+              </div>
+              {repairOpen && (
+                <div className="dropdown-menu">
+                  <Link to="/mail-in-repair" className="dropdown-item">
+                    Mail in Repair
+                  </Link>
+                  {/* <Link to="/" className="dropdown-item">
                   Repair On Store
                 </Link> */}
-                <Link to={`/repair?id=8`} className="dropdown-item">
-                  Walk in Repair
-                </Link>
-              </div>
-            )}
-          </div>
-
-          {/* Shop Modal Trigger */}
-          <div className={`nav-link ${isModalOpen ? "active" : ""}`}>
-            <div
-              onClick={(e) => {
-                e.preventDefault();
-                setModalOpen(true);
-              }}
-              style={{ cursor: "pointer" }}
-            >
-              Shop
+                  <Link to={`/repair?id=7`} className="dropdown-item">
+                    Walk in Repair
+                  </Link>
+                </div>
+              )}
             </div>
-            <Modal
-              isOpen={isModalOpen}
-              onClose={() => setModalOpen(false)}
-              showHeader={false}
-              showCloseButton={false}
-              width="calc(100% - 100px)"
-            >
-              <h2 className="heading">What you want to buy today?</h2>
+
+            {/* Shop Modal Trigger */}
+            <div className={`nav-link ${isModalOpen ? "active" : ""}`}>
               <div
-                className="d_flex"
-                style={{ flexWrap: "wrap", justifyContent: "center" }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setModalOpen(true);
+                }}
+                style={{ cursor: "pointer" }}
               >
-                <ProductCard
-                  image={images.repair1}
-                  showTitle={false}
-                  btn3Text="Buy SmartPhones"
-                  showBtnSec2={true}
-                  showBorder={false}
-                  showBtnSec={false}
-                  btn3Click={() => navigate("/shop-phones")}
-                />
-                <ProductCard
-                  image={images.repair2}
-                  showTitle={false}
-                  title="Apple iphone 16 "
-                  btn3Text="Buy Smart Watches"
-                  showBtnSec2={true}
-                  showBorder={false}
-                  showBtnSec={false}
-                  btn3Click={() => navigate("/shop-watches")}
-                />
-                <ProductCard
-                  image={images.repair3}
-                  showTitle={false}
-                  title="Apple iphone 16 "
-                  btn3Text="Buy Laptops"
-                  showBtnSec2={true}
-                  showBorder={false}
-                  showBtnSec={false}
-                  btn3Click={() => navigate("/shop-laptops")}
-                />
-                <ProductCard
-                  image={images.repair4}
-                  showTitle={false}
-                  title="Apple iphone 16 "
-                  btn3Text="Buy Ipads"
-                  showBtnSec2={true}
-                  showBorder={false}
-                  showBtnSec={false}
-                  btn3Click={() => navigate("/shop-ipads")}
-                />
-                <ProductCard
-                  image={images.repair5}
-                  showTitle={false}
-                  title="Apple iphone 16 "
-                  btn3Text="Buy Gaming Consoles"
-                  showBtnSec2={true}
-                  showBorder={false}
-                  showBtnSec={false}
-                  btn3Click={() => navigate("/shop-consoles")}
-                />
+                Shop
               </div>
-            </Modal>
-          </div>
-
-          <Link
-            to="/phone-parts"
-            className={`nav-link ${isActive("/phone-parts") ? "active" : ""}`}
-          >
-            Phone Parts
-          </Link>
-
-          {/* PC Builds Dropdown */}
-          <div className={`nav-link dropdown ${pcBuildsOpen ? "active" : ""}`}>
-            <div
-              onClick={() => setPcBuildsOpen(!pcBuildsOpen)}
-              className="dropdown-toggle"
-            >
-              PC Builds
-              {/* <FontAwesomeIcon icon={faChevronDown} className="dropdown-icon" /> */}
+              <Modal
+                isOpen={isModalOpen}
+                onClose={() => setModalOpen(false)}
+                showHeader={false}
+                showCloseButton={false}
+                width="calc(100% - 100px)"
+              >
+                <h2 className="heading">What you want to buy today?</h2>
+                <div
+                  className="d_flex"
+                  style={{ flexWrap: "wrap", justifyContent: "center" }}
+                >
+                  <ProductCard
+                    image={images.repair1}
+                    showTitle={false}
+                    btn3Text="Buy SmartPhones"
+                    showBtnSec2={true}
+                    showBorder={false}
+                    showBtnSec={false}
+                    btn3Click={() => navigate("/shop-phones")}
+                  />
+                  <ProductCard
+                    image={images.repair2}
+                    showTitle={false}
+                    title="Apple iphone 16 "
+                    btn3Text="Buy Smart Watches"
+                    showBtnSec2={true}
+                    showBorder={false}
+                    showBtnSec={false}
+                    btn3Click={() => navigate("/shop-watches")}
+                  />
+                  <ProductCard
+                    image={images.repair3}
+                    showTitle={false}
+                    title="Apple iphone 16 "
+                    btn3Text="Buy Laptops"
+                    showBtnSec2={true}
+                    showBorder={false}
+                    showBtnSec={false}
+                    btn3Click={() => navigate("/shop-laptops")}
+                  />
+                  <ProductCard
+                    image={images.repair4}
+                    showTitle={false}
+                    title="Apple iphone 16 "
+                    btn3Text="Buy Ipads"
+                    showBtnSec2={true}
+                    showBorder={false}
+                    showBtnSec={false}
+                    btn3Click={() => navigate("/shop-ipads")}
+                  />
+                  <ProductCard
+                    image={images.repair5}
+                    showTitle={false}
+                    title="Apple iphone 16 "
+                    btn3Text="Buy Gaming Consoles"
+                    showBtnSec2={true}
+                    showBorder={false}
+                    showBtnSec={false}
+                    btn3Click={() => navigate("/shop-consoles")}
+                  />
+                </div>
+              </Modal>
             </div>
-            {pcBuildsOpen && (
-              <div className="dropdown-menu">
-                <Link to="/customize-pcs" className="dropdown-item">
-                  Customize Pcs
-                </Link>
-                <Link to="/prebuild-pcs" className="dropdown-item">
-                  Pre Build Pcs
-                </Link>
-              </div>
-            )}
-          </div>
 
-          <Link
-            to="/services"
-            className={`nav-link ${isActive("/services") ? "active" : ""}`}
-          >
-            Services
-          </Link>
-        </nav>
-        <div className="header-right">
-          <GlobalButton
-            text={"Contact Us"}
-            onClick={() => navigate("/contact-us")}
-          />
-          <div className="profile-dropdown-wrapper">
-            <button
-              className="profile-button"
-              onClick={() => setShowProfileDropdown(!showProfileDropdown)}
+            <Link
+              to="/phone-parts"
+              className={`nav-link ${isActive("/phone-parts") ? "active" : ""}`}
             >
-              <FontAwesomeIcon icon={faUser} size="lg" />
-            </button>
+              Phone Parts
+            </Link>
 
-            {/* {showProfileDropdown && (
+            {/* PC Builds Dropdown */}
+            <div
+              className={`nav-link dropdown ${pcBuildsOpen ? "active" : ""}`}
+            >
+              <div
+                onClick={() => setPcBuildsOpen(!pcBuildsOpen)}
+                className="dropdown-toggle"
+              >
+                PC Builds
+                {/* <FontAwesomeIcon icon={faChevronDown} className="dropdown-icon" /> */}
+              </div>
+              {pcBuildsOpen && (
+                <div className="dropdown-menu">
+                  <Link to="/customize-pcs" className="dropdown-item">
+                    Customize Pcs
+                  </Link>
+                  <Link to="/prebuild-pcs" className="dropdown-item">
+                    Pre Build Pcs
+                  </Link>
+                </div>
+              )}
+            </div>
+
+            <Link
+              to="/services"
+              className={`nav-link ${isActive("/services") ? "active" : ""}`}
+            >
+              Services
+            </Link>
+          </nav>
+          <div className="header-right">
+            <GlobalButton
+              text={"Contact Us"}
+              onClick={() => navigate("/contact-us")}
+            />
+            <div className="profile-dropdown-wrapper">
+              <button
+                className="profile-button"
+                onClick={() => setShowProfileDropdown(!showProfileDropdown)}
+              >
+                <FontAwesomeIcon icon={faUser} size="lg" />
+              </button>
+
+              {/* {showProfileDropdown && (
               <div className="profile-dropdown">
                 <div onClick={() => navigate("/profile")}>Profile</div>
                 <div onClick={handleLogout}>Logout</div>
               </div>
             )} */}
-            {showProfileDropdown && (
-              <div className="profile-dropdown">
-                {token ? (
-                  <>
-                    <div onClick={() => navigate("/profile")}>Profile</div>
-                    <div onClick={handleLogout}>Logout</div>
-                  </>
-                ) : (
-                  <div
-                    onClick={() => {
-                      setLoginModalOpen(true); // 👈 modal open trigger
-                      setShowProfileDropdown(false); // 👈 dropdown close
-                    }}
-                  >
-                    Login
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-
-          <button className="cart_option" onClick={() => setShowCart(true)}>
-            <Image src={images.cart} alt="cart_option" />
-            <div className="cart_amount">
-              <small>{totalQuantity}</small>
+              {showProfileDropdown && (
+                <div className="profile-dropdown">
+                  {token ? (
+                    <>
+                      <div onClick={() => navigate("/profile")}>Profile</div>
+                      <div onClick={handleLogout}>Logout</div>
+                    </>
+                  ) : (
+                    <div
+                      onClick={() => {
+                        setLoginModalOpen(true); // 👈 modal open trigger
+                        setShowProfileDropdown(false); // 👈 dropdown close
+                      }}
+                    >
+                      Login
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
-          </button>
-        </div>
-        <div className={`offcanvas-cart ${showCart ? "show" : ""}`}>
-          <div className="cart-header">
-            <h3 className="title2">Your Shopping Cart</h3>
-            <button onClick={() => setShowCart(false)} className="closebtn">
-              ✕
+
+            <button className="cart_option" onClick={() => setShowCart(true)}>
+              <Image src={images.cart} alt="cart_option" />
+              <div className="cart_amount">
+                <small>{totalQuantity}</small>
+              </div>
             </button>
           </div>
+          <div className={`offcanvas-cart ${showCart ? "show" : ""}`}>
+            <div className="cart-header">
+              <h3 className="title2">Your Shopping Cart</h3>
+              <button onClick={() => setShowCart(false)} className="closebtn">
+                ✕
+              </button>
+            </div>
 
-          <div className="cart-body">
-            {cartData.items && cartData.items.length > 0 ? (
-              cartData.items.map((item) => (
-                <OrderItem
-                  key={item.product.id}
-                  image={item.product.image}
-                  title={item.product.title}
-                  price={item.product.price}
-                  quantity={item.quantity}
-                  showCloseButton={true}
-                  onIncrement={() => handleIncrement(item)}
-                  onDecrement={() => handleDecrement(item)}
-                  onRemove={() => removeItem(item.id)}
-                />
-              ))
-            ) : (
-              <div className="empty-cart-message">
-                <p>Your cart is empty.</p>
-              </div>
-            )}
-          </div>
+            <div className="cart-body">
+              {cartData.items && cartData.items.length > 0 ? (
+                cartData.items.map((item) => (
+                  <OrderItem
+                    key={item.product.id}
+                    image={
+                      item.product.images?.[0]?.image_path ||
+                      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXxZR0_1ISIJx_T4oB5-5OJVSNgSMFLe8eCw&s"
+                    }
+                    title={item.product.title}
+                    price={item.product.price}
+                    quantity={item.quantity}
+                    showCloseButton={true}
+                    onIncrement={() => handleIncrement(item)}
+                    onDecrement={() => handleDecrement(item)}
+                    onRemove={() => removeItem(item.id)}
+                  />
+                ))
+              ) : (
+                <div className="empty-cart-message">
+                  <p>Your cart is empty.</p>
+                </div>
+              )}
+            </div>
 
-          <div className="cart-footer">
-            <p>
-              <strong>Subtotal:</strong> ${cartData.subtotal?.toFixed(2)}
-            </p>
-            <GlobalButton
-              text="Proceed To Checkout"
-              color="#000"
-              textColor="#ffff"
-              onClick={() => {
-                // setShowCart(false);
-                navigate("/checkout");
-              }}
-            />
+            <div className="cart-footer">
+              <p>
+                <strong>Subtotal:</strong> ${cartData.subtotal?.toFixed(2)}
+              </p>
+              <GlobalButton
+                text="Proceed To Checkout"
+                color="#000"
+                textColor="#ffff"
+                onClick={() => {
+                  // setShowCart(false);
+                  navigate("/checkout");
+                }}
+              />
+            </div>
           </div>
         </div>
       </header>
@@ -867,11 +878,13 @@ const Layout = ({
           <Row>
             <Col lg={4} md={4} sm={3}>
               <div className="footer-left">
-                <Image
-                  src={images.footerLogo}
-                  alt="Logo"
-                  className="footer-logo"
-                />
+                <Link to="/" className="logo-link">
+                  <Image
+                    src={images.footerLogo}
+                    alt="Logo"
+                    className="footer-logo"
+                  />
+                </Link>
                 <div className="border-bottom m-5"></div>
                 <div className="social-icons">
                   <a
@@ -896,7 +909,6 @@ const Layout = ({
                       className="icon"
                     />
                   </a>
-
                   <a
                     href="https://wa.me/13467337447"
                     target="_blank"

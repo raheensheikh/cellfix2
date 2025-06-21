@@ -12,9 +12,20 @@ import { apiHelper } from "../services/index.js";
 import { toast } from "react-toastify";
 import Modal from "../components/Modal.jsx";
 import { useDispatch } from "react-redux";
-import { decrementQuantity, incrementQuantity } from "../redux/slices/cartSlice.js";
-import { CardCvcElement, CardElement, CardExpiryElement, CardNumberElement, Elements, useElements, useStripe } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
+import {
+  decrementQuantity,
+  incrementQuantity,
+} from "../redux/slices/cartSlice.js";
+import {
+  CardCvcElement,
+  CardElement,
+  CardExpiryElement,
+  CardNumberElement,
+  Elements,
+  useElements,
+  useStripe,
+} from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 import OverlayLoader from "../components/Loader.jsx";
 const Checkout = () => {
   const navigate = useNavigate();
@@ -23,24 +34,24 @@ const Checkout = () => {
   const [activeCard, setActiveCard] = useState(0);
   const [cartData, setCartData] = useState([]);
   const [isModalSuccess, setModalSuccess] = useState(false);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const [token, setToken] = useState(null);
   const [error, setError] = useState(null);
   const stripe = useStripe();
   const elements = useElements();
   const [values, setValues] = useState({
-    firstName: '',
+    firstName: "",
     lastName: "",
-    email: '',
-    phone: '',
-    address: '',
-    city: '',
-    state: '',
-    postalCode: '',
-    landmark: '',
-    paymentMethod: ''
-  })
-  const dispatch = useDispatch()
+    email: "",
+    phone: "",
+    address: "",
+    city: "",
+    state: "",
+    postalCode: "",
+    landmark: "",
+    paymentMethod: "",
+  });
+  const dispatch = useDispatch();
   const elementWrapperStyle = {
     padding: "8px",
     boxShadow: "0px 0px 3px 0px #cccccc5e",
@@ -56,22 +67,22 @@ const Checkout = () => {
     style: {
       base: {
         fontSize: "16px",
-        height: '45px',
+        height: "45px",
         color: "#000",
         letterSpacing: "0.025em",
         lineHeight: "29px",
         fontFamily: "Source Code Pro, monospace",
         "::placeholder": { color: "#aab7c4" },
       },
-      invalid: { color: "#9e2146" }
-    }
+      invalid: { color: "#9e2146" },
+    },
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setValues(prevValues => ({
+    setValues((prevValues) => ({
       ...prevValues,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -101,7 +112,7 @@ const Checkout = () => {
     );
     if (response) {
       setCartData(response.data.response.data);
-      dispatch(incrementQuantity())
+      dispatch(incrementQuantity());
     } else {
       toast.error(error);
     }
@@ -120,21 +131,26 @@ const Checkout = () => {
     );
     if (response) {
       setCartData(response.data.response.data);
-      dispatch(decrementQuantity())
+      dispatch(decrementQuantity());
     } else {
       toast.error(error);
     }
   };
 
   const handleRemoveItem = async (item) => {
-    const {response, error} = await apiHelper('DELETE', `cart/remove/${item.id}`, {}, null)
-    if(response){
+    const { response, error } = await apiHelper(
+      "DELETE",
+      `cart/remove/${item.id}`,
+      {},
+      null
+    );
+    if (response) {
       setCartData(response.data.response.data);
-      dispatch(decrementQuantity())
-    }else{
+      dispatch(decrementQuantity());
+    } else {
       toast.error(error);
     }
-  }
+  };
 
   const cardImages = [
     images.card1,
@@ -155,23 +171,29 @@ const Checkout = () => {
       state: values.state,
       postal_code: values.postalCode,
       landmark: values.landmark,
-      payment_method: paymentMethod
-    }
-    const { response, error } = await apiHelper('POST', 'cart/complete-purchase', {}, body)
+      payment_method: paymentMethod,
+    };
+    const { response, error } = await apiHelper(
+      "POST",
+      "cart/complete-purchase",
+      {},
+      body
+    );
     if (response) {
-      setLoading(false)
-      console.log(response.data.response.data.payment_instructions)
-      const redirectUrl = response.data.response.data.payment_instructions?.payment_link;
-      console.log(redirectUrl)
-      setModalSuccess(true)
-      if(redirectUrl){
-        window.open(redirectUrl, '_blank');
+      setLoading(false);
+      console.log(response.data.response.data.payment_instructions);
+      const redirectUrl =
+        response.data.response.data.payment_instructions?.payment_link;
+      console.log(redirectUrl);
+      setModalSuccess(true);
+      if (redirectUrl) {
+        window.open(redirectUrl, "_blank");
       }
     } else {
-      setLoading(false)
-      toast.error(error)
+      setLoading(false);
+      toast.error(error);
     }
-  }
+  };
 
   const getCardToken = async () => {
     if (!stripe || !elements) return;
@@ -181,58 +203,63 @@ const Checkout = () => {
 
     if (error) {
       console.error(error);
-      toast.error(error)
+      toast.error(error);
       setToken(null);
-      setLoading(false)
+      setLoading(false);
     } else {
       console.log("Stripe Token:", token);
       setToken(token.id);
-      addCard(token.id)
+      addCard(token.id);
     }
-  }
+  };
 
   const addCard = async (tokenId) => {
     const body = {
-      token: tokenId
+      token: tokenId,
+    };
+    const { response, error } = await apiHelper("POST", "cards/add", {}, body);
+    if (response) {
+      console.log(response.data.data);
+      activateCard(response.data.data.id);
+    } else {
+      toast.error(error);
+      setLoading(false);
     }
-    const {response, error} = await apiHelper('POST', 'cards/add', {}, body)
-    if(response){
-      console.log(response.data.data)
-      activateCard(response.data.data.id)
-    }else{
-      toast.error(error)
-      setLoading(false)
-    }
-  }
+  };
 
   const activateCard = async (cardId) => {
     const body = {
-      card_id: cardId
+      card_id: cardId,
+    };
+    console.log(cardId);
+    const { response, error } = await apiHelper(
+      "POST",
+      "cards/active",
+      {},
+      body
+    );
+    if (response) {
+      console.log(response.data.data);
+      checkout("Stripe");
+    } else {
+      toast.error(error);
+      setLoading(false);
     }
-    console.log(cardId)
-    const {response, error} = await apiHelper('POST', "cards/active", {}, body)
-    if(response){
-      console.log(response.data.data)
-      checkout('Stripe')
-    }else{
-      toast.error(error)
-      setLoading(false)
-    }
-  }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-      setLoading(true)
-    if(activeCard === 0){
-      getCardToken()
-    }else if (activeCard === 1){
-      checkout('PayPal')
-    }else if (activeCard === 2){
-      checkout('Zelle')
-    }else if (activeCard === 3){
-      checkout('Cashapp')
-    }else if (activeCard === 4){
-      checkout("COD")
+    setLoading(true);
+    if (activeCard === 0) {
+      getCardToken();
+    } else if (activeCard === 1) {
+      checkout("PayPal");
+    } else if (activeCard === 2) {
+      checkout("Zelle");
+    } else if (activeCard === 3) {
+      checkout("Cashapp");
+    } else if (activeCard === 4) {
+      checkout("COD");
     }
   };
 
@@ -240,17 +267,17 @@ const Checkout = () => {
     setActiveCard(index);
   };
 
-  useEffect(()=>{
-    console.log(activeCard)
-  },[activeCard])
+  useEffect(() => {
+    console.log(activeCard);
+  }, [activeCard]);
 
   return (
-      <div>
-        <Layout>
-          <section className="checkout_section">
-            <Container>
-              <form onSubmit={handleSubmit}>
-                <Row>
+    <div>
+      <Layout>
+        <section className="checkout_section">
+          <Container>
+            <form onSubmit={handleSubmit}>
+              <Row>
                 <Col lg={6} md={8} className="mb-3">
                   <h2 className="heading">Complete your order</h2>
                   <p className="redText ">Personal Details</p>
@@ -306,51 +333,54 @@ const Checkout = () => {
                       {cardImages.map((img, index) => (
                         <div
                           key={index}
-                          className={`cards ${activeCard === index ? "active" : ""
-                            }`}
+                          className={`cards ${
+                            activeCard === index ? "active" : ""
+                          }`}
                           onClick={() => handleCardClick(index)}
                         >
                           <Image src={img} alt={`Card ${index + 1}`} />
                         </div>
                       ))}
                     </div>
-                    {
-                      activeCard === 0 && (
-                        <>
+                    {activeCard === 0 && (
+                      <>
                         <Col lg={6} md={6}>
-                      <LabeledInput
-                        label="Card Holder Name"
-                        placeholder="Enter Card Holder Name"
-                        className="inputfield"
-                      />
-                    </Col>
-                    <Col lg={6} md={6}>
-                      <div className={`labeled-input`}>
-                        <label className="input-label">Card Number</label>
-                        <div style={elementWrapperStyle}>
-                          <CardNumberElement options={CARD_ELEMENT_OPTIONS} />
-                        </div>
-                      </div>
-                    </Col>
-                    <Col lg={6} md={6} sm={6}>
-                      <div className={`labeled-input`}>
-                        <label className="input-label">CVC</label>
-                        <div style={elementWrapperStyle}>
-                          <CardCvcElement options={CARD_ELEMENT_OPTIONS} />
-                        </div>
-                      </div>
-                    </Col>
-                    <Col lg={6} md={6} sm={6}>
-                      <div className={`labeled-input`}>
-                        <label className="input-label">Expiry Date</label>
-                        <div style={elementWrapperStyle}>
-                          <CardExpiryElement options={CARD_ELEMENT_OPTIONS} />
-                        </div>
-                      </div>
-                    </Col>
-                        </>
-                      )
-                    }
+                          <LabeledInput
+                            label="Card Holder Name"
+                            placeholder="Enter Card Holder Name"
+                            className="inputfield"
+                          />
+                        </Col>
+                        <Col lg={6} md={6}>
+                          <div className={`labeled-input`}>
+                            <label className="input-label">Card Number</label>
+                            <div style={elementWrapperStyle}>
+                              <CardNumberElement
+                                options={CARD_ELEMENT_OPTIONS}
+                              />
+                            </div>
+                          </div>
+                        </Col>
+                        <Col lg={6} md={6} sm={6}>
+                          <div className={`labeled-input`}>
+                            <label className="input-label">CVC</label>
+                            <div style={elementWrapperStyle}>
+                              <CardCvcElement options={CARD_ELEMENT_OPTIONS} />
+                            </div>
+                          </div>
+                        </Col>
+                        <Col lg={6} md={6} sm={6}>
+                          <div className={`labeled-input`}>
+                            <label className="input-label">Expiry Date</label>
+                            <div style={elementWrapperStyle}>
+                              <CardExpiryElement
+                                options={CARD_ELEMENT_OPTIONS}
+                              />
+                            </div>
+                          </div>
+                        </Col>
+                      </>
+                    )}
                     <p className="redText my-3">Shipping Address</p>
                     <Col lg={12} md={12}>
                       <LabeledInput
@@ -421,7 +451,11 @@ const Checkout = () => {
                     {cartData.items?.map((item) => (
                       <OrderItem
                         key={item.product.id}
-                        image={item.product.image}
+                        // image={item.product.image}
+                        image={
+                          item.product.images?.[0]?.image_path ||
+                          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXxZR0_1ISIJx_T4oB5-5OJVSNgSMFLe8eCw&s"
+                        }
                         title={item.product.title}
                         price={item.product.price}
                         showCloseButton={true}
@@ -438,10 +472,7 @@ const Checkout = () => {
                     />
                   </div>
                   <div className="btn_sec d_flex mt-3">
-                    <GlobalButton
-                      text="Complete Purchase"
-                      border="none"
-                    />
+                    <GlobalButton text="Complete Purchase" border="none" />
                     <GlobalButton
                       text="Cancel"
                       color="#fff"
@@ -452,33 +483,33 @@ const Checkout = () => {
                   </div>
                 </Col>
               </Row>
-              </form>
-            </Container>
-          </section>
-          <Modal
-            isOpen={isModalSuccess}
-            onClose={() => setModalSuccess(false)}
-            showHeader={false}
-            heading="Contact Us"
-          >
-            <div className="successModal">
-              <Image src={images.check} alt="Success" />
-              <h2 className="heading">Your order has been placed successfully</h2>
-              <p className="para">
-                your order will be delivered to you as soon as possible
-              </p>
-              <div className="btn_sec">
-                <GlobalButton
-                  text="Back to Shopping Orders"
-                  border="1px solid #000"
-                  onClick={() => navigate("/")}
-                />
-              </div>
+            </form>
+          </Container>
+        </section>
+        <Modal
+          isOpen={isModalSuccess}
+          onClose={() => setModalSuccess(false)}
+          showHeader={false}
+          heading="Contact Us"
+        >
+          <div className="successModal">
+            <Image src={images.check} alt="Success" />
+            <h2 className="heading">Your order has been placed successfully</h2>
+            <p className="para">
+              your order will be delivered to you as soon as possible
+            </p>
+            <div className="btn_sec">
+              <GlobalButton
+                text="Back to Shopping Orders"
+                border="1px solid #000"
+                onClick={() => navigate("/")}
+              />
             </div>
-          </Modal>
-                <OverlayLoader visible={loading} />
-        </Layout>
-      </div>
+          </div>
+        </Modal>
+        <OverlayLoader visible={loading} />
+      </Layout>
+    </div>
   );
 };
 

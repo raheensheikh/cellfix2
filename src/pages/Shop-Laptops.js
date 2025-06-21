@@ -48,7 +48,7 @@ const ShopLaptop = () => {
     if (response) {
       const products = response.data.response.data;
       const grouped = {};
-      const map = {}
+      const map = {};
       products.forEach((product) => {
         const brand = product.sub_category?.name || "Others";
         const subId = product.sub_category?.id;
@@ -106,11 +106,9 @@ const ShopLaptop = () => {
     }
   };
 
-
   useEffect(() => {
     getProducts();
   }, []);
-
 
   const handleAddToCart = async (product) => {
     dispatch(addToCart(product));
@@ -139,7 +137,8 @@ const ShopLaptop = () => {
 
     return {
       eventKey: brand.toLowerCase().replace(/\s+/g, "-"),
-      image: brandImages[brand.split(" ")[0]] || "https://via.placeholder.com/50",
+      image:
+        brandImages[brand.split(" ")[0]] || "https://via.placeholder.com/50",
       content: (
         <>
           <SearchField searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
@@ -153,7 +152,7 @@ const ShopLaptop = () => {
                 <Col key={product.id} lg={4} md={4} sm={6} xs={6}>
                   <ProductCard
                     image={
-                      product.images?.[0]?.url ||
+                      product.images?.[0]?.image_path ||
                       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXxZR0_1ISIJx_T4oB5-5OJVSNgSMFLe8eCw&s"
                     }
                     showTitle={true}
@@ -180,8 +179,9 @@ const ShopLaptop = () => {
                 {Array.from({ length: totalPages }, (_, i) => (
                   <li
                     key={i}
-                    className={`page-item ${currentPage === i + 1 ? "active" : ""
-                      }`}
+                    className={`page-item ${
+                      currentPage === i + 1 ? "active" : ""
+                    }`}
                   >
                     <button
                       className="page-link"
@@ -211,14 +211,19 @@ const ShopLaptop = () => {
       <h2 className="heading">
         Shop the best products from your favorite brands!
       </h2>
-      <Container>{!loading && <DynamicTabs tabsData={tabs}
-        onTabChange={(key) => {
-          const selectedBrand = Object.keys(filteredProductsByBrand).find(
-            (brand) => brand.toLowerCase().replace(/\s+/g, "-") === key
-          );
-          if (selectedBrand) setActiveBrand(selectedBrand);
-        }}
-      />}</Container>
+      <Container>
+        {!loading && (
+          <DynamicTabs
+            tabsData={tabs}
+            onTabChange={(key) => {
+              const selectedBrand = Object.keys(filteredProductsByBrand).find(
+                (brand) => brand.toLowerCase().replace(/\s+/g, "-") === key
+              );
+              if (selectedBrand) setActiveBrand(selectedBrand);
+            }}
+          />
+        )}
+      </Container>
     </Layout>
   );
 };

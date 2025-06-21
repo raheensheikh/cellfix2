@@ -54,6 +54,11 @@ img {
   padding: 0 20px;
   border-bottom: 1px solid #000;
 }
+header {
+  position: fixed;
+  z-index: 9;
+  width: 100%;
+}
 .header-left {
   gap: 20px;
 }
@@ -187,6 +192,8 @@ footer {
   align-items: center;
   gap: 30px;
   width: 100%;
+  position: relative;
+  top: 85px;
 }
 .footer-left {
   text-align: center;
@@ -877,12 +884,13 @@ iframe {
 /*************** DETAILS PAGE CSS STARTS HERE ***************/
 
 .detailImage {
-  display: flex;
-  justify-content: center;
-  background: #f1ecec;
-  padding: 20px;
-  height: 80%;
   align-items: center;
+  background: #f1ecec;
+  display: flex;
+  max-height: 1000px;
+  min-height: 50%;
+  justify-content: center;
+  padding: 20px;
 }
 .details_section .heading {
   font-size: 35px;
@@ -900,17 +908,21 @@ iframe {
 ul {
   padding-left: 12px !important;
 }
-.itemFeatures {
-  width: 50%;
+.specs {
+  align-items: start;
+  gap: 20px;
 }
 
+.specs p {
+  width: 50%;
+}
 .itemFeatures .boldTitle {
   font-weight: 600;
   font-size: 14px;
 }
 .detailImage img {
-  width: 275px;
-  height: 300px;
+  width: 100%;
+  height: 100%;
   border-radius: 12px;
 }
 .itemFeatures .text {
@@ -1261,8 +1273,12 @@ p.companydesc {
   bottom: -4px;
 }
 main.content-body {
-  flex: 1;
+  /* flex: 1 1; */
   padding: 20px;
+  position: relative;
+  top: 100px;
+  height: 100%;
+  margin: 0;
 }
 
 .layout-wrapper {
@@ -1338,6 +1354,7 @@ p {
 }
 .contactNumbers p {
   margin-bottom: 8px;
+  text-transform: capitalize;
 }
 .Toastify {
   margin: 0 !important;
@@ -1407,4 +1424,35 @@ p {
   background-color: #000;
   color: #fff;
   border-color: #000;
+}
+.productCard_price {
+  font-weight: 600;
+}
+.cancel-button {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: #ff4d4f;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+}
+
+.cancel-button:hover {
+  background-color: #d9363e;
+}
+.image-preview-wrapper {
+  position: relative;
+  display: inline-block;
+  margin-top: 10px;
 }

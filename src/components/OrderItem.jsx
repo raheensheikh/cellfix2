@@ -13,8 +13,9 @@ const OrderItem = ({
 }) => {
   return (
     <div className="orderItem">
-      <div className="d_flex">
+      <div className="d_flex" style={{gap:"10px"}}>
         <Image src={image} alt="product" />
+        
         {showCloseButton && (
           <button className="removeItem" type="button" onClick={onRemove}>
             ×

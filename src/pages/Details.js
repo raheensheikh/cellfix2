@@ -7,6 +7,8 @@ import { apiHelper } from "../services/index.js";
 import { toast } from "react-toastify";
 import { addToCart, incrementQuantity } from "../redux/slices/cartSlice.js";
 import { useDispatch, useSelector } from "react-redux";
+import ImageGallery from "react-image-gallery";
+import "react-image-gallery/styles/css/image-gallery.css";
 
 const Details = () => {
   const { id } = useParams();
@@ -14,7 +16,11 @@ const Details = () => {
   const [selectedColor, setSelectedColor] = useState(null);
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [images, setImages] = useState([]);
   const dispatch = useDispatch();
+  useEffect(() => {
+    console.log("Product details:", product);
+  }, [product]);
 
   const getDetails = async () => {
     setLoading(true);
@@ -31,6 +37,12 @@ const Details = () => {
       if (response.data.response.data.colors?.length) {
         setSelectedColor(response.data.response.data.colors[0]);
       }
+      const productImages = response.data.response.data.images.map((img) => ({
+        original: img.image_path,
+        thumbnail: img.image_path,
+      }));
+      setImages(productImages);
+    } else if (error === "Product not found") {
     } else {
       toast.error(error);
     }
@@ -38,28 +50,27 @@ const Details = () => {
   const handleAddToCart = async (product) => {
     const body = {
       product_id: product?.id,
-      ...(selectedColor && { selected_color_id: selectedColor.id })
+      ...(selectedColor && { selected_color_id: selectedColor.id }),
     };
     const { response, error } = await apiHelper("POST", "cart/add", {}, body);
     if (response) {
       console.log(response.data.data);
-      dispatch(incrementQuantity())
+      dispatch(incrementQuantity());
     } else {
       toast.error(error);
     }
   };
 
-
-const handleBuyNow = async (product) => {
+  const handleBuyNow = async (product) => {
     const body = {
       product_id: product?.id,
-      ...(selectedColor && { selected_color_id: selectedColor.id })
+      ...(selectedColor && { selected_color_id: selectedColor.id }),
     };
     const { response, error } = await apiHelper("POST", "cart/add", {}, body);
     if (response) {
       console.log(response.data.data);
-      dispatch(incrementQuantity())
-      navigate("/checkout")
+      dispatch(incrementQuantity());
+      navigate("/checkout");
     } else {
       toast.error(error);
     }
@@ -69,9 +80,9 @@ const handleBuyNow = async (product) => {
     if (id) getDetails();
   }, [id]);
 
-  useEffect(()=>{
-    console.log('seleted color',selectedColor)
-  },[selectedColor])
+  useEffect(() => {
+    console.log("seleted color", selectedColor);
+  }, [selectedColor]);
 
   if (loading) return <p className="text-center">Loading...</p>;
   if (!product) return <p className="text-center">No product found.</p>;
@@ -81,29 +92,24 @@ const handleBuyNow = async (product) => {
     long_title,
     description_points,
     detailed_specifications,
-    images,
     colors,
     price,
     stock,
   } = product;
-
   return (
     <Layout>
       <section className="details_section">
         <Container>
           <Row>
-            <Col lg={5}>
+            <Col lg={5} className="mb-3">
               <div className="detailImage">
-                <Image
-                  src={
-                    images?.[0]?.url ||
-                    "https://via.placeholder.com/400x400?text=No+Image"
-                  }
-                  fluid
-                />
+                {/* <Image
+                    src={product?.images[0]?.image_path || images.smartphone1}
+                /> */}
+                <ImageGallery items={images} />
               </div>
             </Col>
-            <Col lg={7}>
+            <Col lg={7} className="mb-3">
               <h2 className="heading">{long_title || title}</h2>
               <p className="title2">About This Item</p>
               <ul className="itmeDesc">
@@ -115,16 +121,16 @@ const handleBuyNow = async (product) => {
               <ul className="itemFeatures">
                 {detailed_specifications &&
                   Object.entries(detailed_specifications).map(([key, val]) => (
-                    <li key={key} className="d_flexBetween">
+                    <li key={key} className="specs d_flexBetween">
                       <p className="boldTitle">{key}</p>
                       <p className="text">{val}</p>
                     </li>
                   ))}
-                <li className="d_flexBetween">
+                <li className="specs d_flexBetween">
                   <p className="boldTitle">Price</p>
                   <p className="text">${price}</p>
                 </li>
-                <li className="d_flexBetween">
+                <li className="specs d_flexBetween">
                   <p className="boldTitle">Stock</p>
                   <p className="text">{stock}</p>
                 </li>

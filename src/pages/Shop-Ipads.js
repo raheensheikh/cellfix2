@@ -34,9 +34,9 @@ const ShopIpads = () => {
   const [allProductsByBrand, setAllProductsByBrand] = useState({});
   const [filteredProductsByBrand, setFilteredProductsByBrand] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
-  const [loading, setLoading] = useState(false); const [activeBrand, setActiveBrand] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [activeBrand, setActiveBrand] = useState("");
   const [brandToSubIdMap, setBrandToSubIdMap] = useState({});
-
 
   const getProducts = async () => {
     setLoading(true);
@@ -100,7 +100,6 @@ const ShopIpads = () => {
     }
   };
 
-
   const handleAddToCart = async (product) => {
     dispatch(addToCart(product));
     const body = {
@@ -133,7 +132,8 @@ const ShopIpads = () => {
 
     return {
       eventKey: brand.toLowerCase().replace(/\s+/g, "-"),
-      image: brandImages[brand.split(" ")[0]] || "https://via.placeholder.com/50",
+      image:
+        brandImages[brand.split(" ")[0]] || "https://via.placeholder.com/50",
       content: (
         <>
           <SearchField searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
@@ -147,7 +147,7 @@ const ShopIpads = () => {
                 <Col key={product.id} lg={4} md={4} sm={6} xs={6}>
                   <ProductCard
                     image={
-                      product.images?.[0]?.url ||
+                      product.images?.[0]?.image_path ||
                       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXxZR0_1ISIJx_T4oB5-5OJVSNgSMFLe8eCw&s"
                     }
                     showTitle={true}
@@ -174,8 +174,9 @@ const ShopIpads = () => {
                 {Array.from({ length: totalPages }, (_, i) => (
                   <li
                     key={i}
-                    className={`page-item ${currentPage === i + 1 ? "active" : ""
-                      }`}
+                    className={`page-item ${
+                      currentPage === i + 1 ? "active" : ""
+                    }`}
                   >
                     <button
                       className="page-link"
@@ -205,14 +206,19 @@ const ShopIpads = () => {
       <h2 className="heading">
         Shop the best products from your favorite brands!
       </h2>
-      <Container>{!loading && <DynamicTabs tabsData={tabs}
-        onTabChange={(key) => {
-          const selectedBrand = Object.keys(filteredProductsByBrand).find(
-            (brand) => brand.toLowerCase().replace(/\s+/g, "-") === key
-          );
-          if (selectedBrand) setActiveBrand(selectedBrand);
-        }}
-      />}</Container>
+      <Container>
+        {!loading && (
+          <DynamicTabs
+            tabsData={tabs}
+            onTabChange={(key) => {
+              const selectedBrand = Object.keys(filteredProductsByBrand).find(
+                (brand) => brand.toLowerCase().replace(/\s+/g, "-") === key
+              );
+              if (selectedBrand) setActiveBrand(selectedBrand);
+            }}
+          />
+        )}
+      </Container>
     </Layout>
   );
 };

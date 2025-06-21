@@ -18,7 +18,7 @@ const handleCallClick = () => {
 const NearestStore = () => {
   const [location, setLocation] = useState([]);
   const [isModalContact, setModalContact] = useState(false);
-  const [selectedStoreId, setSelectedStoreId] = useState(null);
+  const [selectedStore, setSelectedStore] = useState(null);
   const [isStoreModal, setStoreModal] = useState(false); // Per-store modal
 
   const [zipcode, setZipcode] = React.useState("");
@@ -98,28 +98,7 @@ const NearestStore = () => {
       setLoading(false);
     }
   };
-  const storeContactInfo = {
-    1: {
-      name: "CellNet",
-      address: "Beechnut st Houston tx 77072",
-      phone: "2814987243",
-    },
-    2: {
-      name: "Xpert Wireless",
-      address: "3818 Linkvalley dr Houston tx 77025",
-      phone: "8328209900",
-    },
-    3: {
-      name: "Xpert 4G Wireless",
-      address: "6610 Antoine dr Houston tx 77091",
-      phone: "7136823333",
-    },
-    4: {
-      name: "Xpert Wireless",
-      address: "5823 w Gulfbank rd Houston tx 77088",
-      phone: "2812720082",
-    },
-  };
+  
   useEffect(() => {
     locations();
   }, []);
@@ -201,7 +180,7 @@ const NearestStore = () => {
                     address={`${store.address} ${store.zipcode}`}
                     onMapClick={() => handleMapClick(store.google_maps_link)}
                     onCallClick={() => {
-                      setSelectedStoreId(store.id);
+                      setSelectedStore(store);
                       setStoreModal(true);
                     }}
                   />
@@ -245,24 +224,22 @@ const NearestStore = () => {
           isOpen={isStoreModal}
           onClose={() => {
             setStoreModal(false);
-            setSelectedStoreId(null);
+            setSelectedStore(null);
           }}
           showHeader={true}
           heading="Store Contact"
         >
-          {selectedStoreId && storeContactInfo[selectedStoreId] ? (
+          {selectedStore ? (
             <div className="contactNumbers">
-              <p className="title">{storeContactInfo[selectedStoreId].name}</p>
+              <p className="title">{selectedStore.name}</p>
               <p className="para">
-                {storeContactInfo[selectedStoreId].address}
+                {selectedStore.address} {selectedStore.zipcode}
               </p>
               <p
                 className="number"
-                onClick={() =>
-                  handleCallClick(storeContactInfo[selectedStoreId].phone)
-                }
+                onClick={() => handleCallClick(selectedStore.phone)}
               >
-                {storeContactInfo[selectedStoreId].phone}
+                {selectedStore.phone || "N/A"}
               </p>
             </div>
           ) : (

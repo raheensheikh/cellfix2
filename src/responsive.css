@@ -287,6 +287,9 @@
   .header {
     height: 80px;
   }
+  main.content-body {
+  top: 80px;
+}
   .reviewTitle {
     font-size: 20px;
   }
@@ -469,6 +472,9 @@
   .header {
     height: 70px;
   }
+  main.content-body {
+  top: 70px;
+}
   .swiper-horizontal > .swiper-pagination-bullets,
   .swiper-pagination-bullets.swiper-pagination-horizontal {
     bottom: 0 !important;
@@ -592,6 +598,9 @@
   .wholesaleBanner .tilte {
     font-size: 20px;
   }
+  .productCard .btn_sec {
+    flex-direction: column;
+  }
 }
 @media (max-width: 575px) {
   footer {
@@ -625,9 +634,7 @@
     width: 130px;
     height: 100px;
   }
-  .productCard .btn_sec {
-    flex-direction: column;
-  }
+
   .servicesData .headingBold {
     font-size: 22px;
   }
@@ -719,6 +726,9 @@
     height: 55px;
     padding: 5px;
   }
+  main.content-body {
+  top: 55px;
+}
   .header-right {
     display: flex;
     align-items: center;
@@ -867,6 +877,10 @@
   }
   .search-icon {
     font-size: 12px;
+  }
+  .productCard_image {
+    width: 100px;
+    height: 85px;
   }
   .buildPc .title2 {
     font-size: 16px;

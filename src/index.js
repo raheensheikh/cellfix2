@@ -6,10 +6,9 @@ import reportWebVitals from "./reportWebVitals";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./responsive.css";
 import "react-toastify/dist/ReactToastify.css";
-
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
-import { store, persistor } from "../src/redux/index"; // adjust path if needed
+import { store, persistor } from "../src/redux/index"; 
 import { ToastContainer } from "react-toastify";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";

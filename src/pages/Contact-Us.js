@@ -12,7 +12,9 @@ import { toast } from "react-toastify";
 const ContactUs = () => {
   const [isModalContact, setModalContact] = useState(false); // Global modal
   const [isStoreModal, setStoreModal] = useState(false); // Per-store modal
-  const [selectedStoreId, setSelectedStoreId] = useState(null);
+  // const [selectedStoreId, setSelectedStoreId] = useState(null);
+  const [selectedStore, setSelectedStore] = useState(null);
+
   const [location, setLocation] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -124,7 +126,7 @@ const ContactUs = () => {
                     address={`${store.address} ${store.zipcode}`}
                     onMapClick={() => handleMapClick(store.google_maps_link)}
                     onCallClick={() => {
-                      setSelectedStoreId(store.id);
+                      setSelectedStore(store);
                       setStoreModal(true);
                     }}
                   />
@@ -172,24 +174,22 @@ const ContactUs = () => {
           isOpen={isStoreModal}
           onClose={() => {
             setStoreModal(false);
-            setSelectedStoreId(null);
+            setSelectedStore(null);
           }}
           showHeader={true}
           heading="Store Contact"
         >
-          {selectedStoreId && storeContactInfo[selectedStoreId] ? (
+          {selectedStore ? (
             <div className="contactNumbers">
-              <p className="title">{storeContactInfo[selectedStoreId].name}</p>
+              <p className="title">{selectedStore.name}</p>
               <p className="para">
-                {storeContactInfo[selectedStoreId].address}
+                {selectedStore.address} {selectedStore.zipcode}
               </p>
               <p
                 className="number"
-                onClick={() =>
-                  handleCallClick(storeContactInfo[selectedStoreId].phone)
-                }
+                onClick={() => handleCallClick(selectedStore.phone)}
               >
-                {storeContactInfo[selectedStoreId].phone}
+                {selectedStore.phone || "N/A"}
               </p>
             </div>
           ) : (

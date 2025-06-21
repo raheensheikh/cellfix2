@@ -5,6 +5,8 @@ import React, { useState } from "react";
 import GlobalButton from "../components/GlobalButton.jsx";
 import { apiHelper } from "../services/index.js";
 import { toast } from "react-toastify";
+import PatternDrawer from "../components/PatternDrawer.jsx";
+
 const OnlineRepair = () => {
   // Personal Info
   const [full_name, setFullName] = useState("");
@@ -12,35 +14,35 @@ const OnlineRepair = () => {
   const [contact, setContact] = useState("");
   const [postal_code, setPostalCode] = useState("");
   const [address, setAddress] = useState("");
+
   // Device Info
   const [device_type, setDeviceType] = useState("");
   const [brand, setBrand] = useState("");
   const [model_info, setModelInfo] = useState("");
   const [imei, setImei] = useState("");
   const [problem, setProblem] = useState("");
+
   // Security
   const [passcode, setPasscode] = useState("");
   const [pincode, setPincode] = useState("");
+
   // Pattern Image
   const [patternImage, setPatternImage] = useState(null);
   const [patternImagePreview, setPatternImagePreview] = useState(null);
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setPatternImage(file);
-      setPatternImagePreview(URL.createObjectURL(file));
-    }
-  };
+
   const handleCancelImage = () => {
     setPatternImage(null);
     setPatternImagePreview(null);
   };
+
   const onlineRepair = async (e) => {
     e.preventDefault();
-    if (!patternImage) {
-      toast.error("Please upload a pattern image.");
+
+    if (!passcode && !pincode && !patternImage) {
+      toast.error("Please provide at least Passcode, Pincode, or Pattern.");
       return;
     }
+
     const formData = new FormData();
     formData.append("full_name", full_name);
     formData.append("email", email);
@@ -54,7 +56,8 @@ const OnlineRepair = () => {
     formData.append("problem", problem);
     formData.append("passcode", passcode);
     formData.append("pincode", pincode);
-    formData.append("pattern_image", patternImage);
+    if (patternImage) formData.append("pattern_image", patternImage);
+
     const { response, error } = await apiHelper(
       "POST",
       "repair/mail-in-repair",
@@ -67,12 +70,14 @@ const OnlineRepair = () => {
         skipAuth: true,
       }
     );
+
     if (response) {
       toast.success(response.data.message || "Repair email sent.");
     } else {
       toast.error(error || "Something went wrong. Please try again.");
     }
   };
+
   return (
     <div>
       <Layout>
@@ -104,8 +109,8 @@ const OnlineRepair = () => {
                     onChange={(e) => setContact(e.target.value)}
                   />
                   <LabeledInput
-                    label="Postal Code"
-                    placeholder="Enter your Postal Code"
+                    label="Zip Code"
+                    placeholder="Enter your Zip Code"
                     className="inputfield"
                     value={postal_code}
                     onChange={(e) => setPostalCode(e.target.value)}
@@ -118,6 +123,7 @@ const OnlineRepair = () => {
                     onChange={(e) => setAddress(e.target.value)}
                   />
                 </Col>
+
                 <Col lg={4} md={6} sm={6} className="border-right">
                   <h2 className="heading">Device Information</h2>
                   <LabeledInput
@@ -143,7 +149,7 @@ const OnlineRepair = () => {
                   />
                   <LabeledInput
                     label="IMEI"
-                    placeholder="IMEI Id"
+                    placeholder="IMEI"
                     className="inputfield"
                     value={imei}
                     onChange={(e) => setImei(e.target.value)}
@@ -156,6 +162,7 @@ const OnlineRepair = () => {
                     onChange={(e) => setProblem(e.target.value)}
                   />
                 </Col>
+
                 <Col lg={4} md={6} sm={6}>
                   <h2 className="heading">About Device</h2>
                   <LabeledInput
@@ -174,9 +181,16 @@ const OnlineRepair = () => {
                     onChange={(e) => setPincode(e.target.value)}
                   />
                   <p className="para text-center">Or</p>
+
                   <div className="image-upload-container">
-                    <label className="form-label">Upload Pattern Image</label>
-                    {patternImagePreview ? (
+                    <label className="form-label">Draw Pattern</label>
+                    <PatternDrawer
+                      onPatternImageReady={(file, previewUrl) => {
+                        setPatternImage(file);
+                        setPatternImagePreview(previewUrl);
+                      }}
+                    />
+                    {patternImagePreview && (
                       <div className="image-preview-wrapper">
                         <img
                           src={patternImagePreview}
@@ -191,13 +205,6 @@ const OnlineRepair = () => {
                           X
                         </button>
                       </div>
-                    ) : (
-                      <input
-                        type="file"
-                        accept="image/*"
-                        className="form-control"
-                        onChange={handleImageChange}
-                      />
                     )}
                   </div>
                 </Col>
@@ -213,4 +220,5 @@ const OnlineRepair = () => {
     </div>
   );
 };
+
 export default OnlineRepair;

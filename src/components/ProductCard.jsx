@@ -35,7 +35,7 @@ const ProductCard = ({
       </div>
       <div className="productCard_content">
         {showTitle && <h3 className="productCard_title">{title}</h3>}
-        {showPrice && <span className="productCard_price mb-2">{price}</span>}
+        {showPrice && <span className="productCard_price mb-2">{`$${price}`}</span>}
 
         {showBtnSec2 && (
           <div className="btnSec2">

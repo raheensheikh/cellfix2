@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { addToCart, incrementQuantity } from "../redux/slices/cartSlice.js";
 import { useNavigate } from "react-router-dom";
-
+import images from "../assets/images/index.js";
 const PrebuildPcs = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -32,11 +32,11 @@ const PrebuildPcs = () => {
     dispatch(addToCart(product));
     const body = { product_id: product?.id };
     const { response, error } = await apiHelper("POST", "cart/add", {}, body);
-    if(response){
-      dispatch(incrementQuantity())
-      navigate("/checkout")
-    }else{
-      toast.error(error)
+    if (response) {
+      dispatch(incrementQuantity());
+      navigate("/checkout");
+    } else {
+      toast.error(error);
     }
   };
 
@@ -59,10 +59,7 @@ const PrebuildPcs = () => {
               pcs.map((pc) => (
                 <Col key={pc.id} lg={4} md={6} sm={12} className="mb-3">
                   <Pc
-                    image={
-                      pc.images?.[0]?.url ||
-                      "https://via.placeholder.com/300x300?text=No+Image"
-                    }
+                    image={pc?.images[0]?.image_path || images.pc1}
                     title={pc.title}
                     details={pc.description_points}
                     btn2Text="Buy Now"

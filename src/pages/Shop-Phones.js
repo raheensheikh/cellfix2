@@ -198,7 +198,7 @@ const ShopPhones = () => {
               <Col key={product.id} lg={4} md={4} sm={6} xs={6}>
                 <ProductCard
                   image={
-                    product.images?.[0]?.url ||
+                    product.images?.[0]?.image_path ||
                     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXxZR0_1ISIJx_T4oB5-5OJVSNgSMFLe8eCw&s"
                   }
                   showTitle={true}

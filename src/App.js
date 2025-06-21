@@ -21,11 +21,13 @@ import PrebuildPcs from "./pages/Prebuild-Pcs";
 import Services from "./pages/Services";
 import { ToastContainer } from "react-toastify";
 import Profile from "./pages/Profile";
+import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
   return (
     <>
       <Router basename="/cellfix4u">
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/repair" element={<Repair />} />

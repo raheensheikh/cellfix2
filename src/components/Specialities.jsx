@@ -8,7 +8,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 const Specialities = ({
   showTitle = true,
   headingText = "Cost-Effective  Repair  Solutions for Smartphones, tablets, laptops & gaming consoles.",
-  paragraphText = "Home of the 15 minute device repair",
+  paragraphText = "Home Of The 15 Minute Device Repair",
   showBtnSec = true,
   showBtnSec2 = false,
   showheadbtn = false,

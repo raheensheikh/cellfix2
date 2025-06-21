@@ -30,7 +30,8 @@ const Repair = () => {
   const [categoryName, setCategoryName] = useState("");
   const [models, setModels] = useState([]);
   const [isStoreModal, setStoreModal] = useState(false);
-  const [selectedStoreId, setSelectedStoreId] = useState(null);
+  // const [selectedStoreId, setSelectedStoreId] = useState(null);
+  const [selectedStore, setSelectedStore] = useState(null);
 
   const repairImages = [
     images.repairImage1,
@@ -50,29 +51,7 @@ const Repair = () => {
     "One Plus": { img: images.oneplus, alt: "OnePlus Logo" },
   };
 
-  const storeContactInfo = {
-    1: {
-      name: "CellNet",
-      address: "Beechnut st Houston tx 77072",
-      phone: "2814987243",
-    },
-    2: {
-      name: "Xpert Wireless",
-      address: "3818 Linkvalley dr Houston tx 77025",
-      phone: "8328209900",
-    },
-    3: {
-      name: "Xpert 4G Wireless",
-      address: "6610 Antoine dr Houston tx 77091",
-      phone: "7136823333",
-    },
-    4: {
-      name: "Xpert Wireless",
-      address: "5823 w Gulfbank rd Houston tx 77088",
-      phone: "2812720082",
-    },
-  };
-
+  
   const issues = [
     {
       id: "Screen Replacement",
@@ -163,7 +142,11 @@ const Repair = () => {
     setLoading(true);
     try {
       const { response } = await apiHelper("GET", `repair/brands/${id}`);
-      const brandData = response?.data?.response?.data || [];
+      const brandData = (response?.data?.response?.data || []).filter(
+        (brand) =>
+          brand.brand !== "Accessories" &&
+          brand.brand !== "Test Brand Phone parts"
+      );
 
       const mapped = brandData.map((brand) => {
         const match = localBrands[brand.brand];
@@ -237,7 +220,7 @@ const Repair = () => {
 
       if (response?.status) {
         toast.success("Repair request submitted successfully.");
-        navigate('/nearest-store')
+        navigate("/nearest-store");
       } else {
         toast.error(response?.message || "Something went wrong.");
       }
@@ -282,15 +265,15 @@ const Repair = () => {
               </div>
 
               <p className="title2">Select your mobile model:</p>
-              <SearchableSelect
-                options={models}
-                value={selectedOption}
-                onChange={(opt) => {
-                  setSelectedOption(opt);
-                  setSelectedModel(opt?.value);
-                }}
-                placeholder="Search or select Mobile Model..."
-              />
+              {models.length > 0 && (
+                <SearchableSelect
+                  label="Model"
+                  options={models}
+                  value={selectedModel}
+                  onChange={setSelectedModel}
+                  placeholder="Select Model"
+                />
+              )}
 
               <p className="title2 mt-2">Select issues of your device:</p>
               <div className="brand-container d_flex">
@@ -331,48 +314,48 @@ const Repair = () => {
       </section>
 
       <section className="services m-3">
-          <Services
-            image={images.service1}
-            heading="Same Day Repairs"
-            title="Expert Repair, Fast Service"
-            description="With our extensive expertise, we deliver high-quality repairs 
+        <Services
+          image={images.service1}
+          heading="Same Day Repairs"
+          title="Expert Repair, Fast Service"
+          description="With our extensive expertise, we deliver high-quality repairs 
           with impressive speed. Many issues can be fixed on the same day, often while you wait. Understanding 
           the inconvenience of a broken device, we prioritize quick fixes to get you back up and running as soon as possible."
-            buttonText="Start a Repair"
-            reverseRow={false}
-            showBtn={false}
-            btnClick={() => navigate("/repair")}
-          />
-        </section>
-        <section className="services m-3">
-          <Services
-            image={images.service2}
-            heading="Authentic Apple ® Parts Now Offered at CellNet"
-            description="Cellnet provides iPhone repairs using only genuine Apple parts, 
+          buttonText="Start a Repair"
+          reverseRow={false}
+          showBtn={false}
+          btnClick={() => navigate("/repair")}
+        />
+      </section>
+      <section className="services m-3">
+        <Services
+          image={images.service2}
+          heading="Authentic Apple ® Parts Now Offered at CellNet"
+          description="Cellnet provides iPhone repairs using only genuine Apple parts, 
               diagnostic software, and specialized tools to ensure your device 
               is repaired with precision and safety. Ask our store associates 
               about the availability of authentic Apple parts for your repair 
               needs."
-            buttonText="Start iphone repair"
-            reverseRow={true}
-            showBtn={false}
-            btnClick={() => navigate("/repair")}
-          />
-        </section>
-        <section className="services m-3">
-          <Services
-            image={images.service3}
-            heading="Genuine Samsung Parts, Reliable Service"
-            description="As an authorized Samsung Service Provider, Cellnet Cell Phone 
+          buttonText="Start iphone repair"
+          reverseRow={true}
+          showBtn={false}
+          btnClick={() => navigate("/repair")}
+        />
+      </section>
+      <section className="services m-3">
+        <Services
+          image={images.service3}
+          heading="Genuine Samsung Parts, Reliable Service"
+          description="As an authorized Samsung Service Provider, Cellnet Cell Phone 
               Repair ensures the use of genuine parts for select Samsung 
               repairs. Our certified technicians are committed to restoring 
               your device with OEM parts, advanced tools, and proven 
               techniques, all while delivering fast, dependable service"
-            buttonText="Start Samsung repair"
-            reverseRow={false}
-            showBtn={false}
-          />
-        </section>
+          buttonText="Start Samsung repair"
+          reverseRow={false}
+          showBtn={false}
+        />
+      </section>
 
       <section className="locationSection m-3">
         <Container>
@@ -389,7 +372,7 @@ const Repair = () => {
                   address={`${store.address} ${store.zipcode}`}
                   onMapClick={() => handleMapClick(store.google_maps_link)}
                   onCallClick={() => {
-                    setSelectedStoreId(store.id);
+                    setSelectedStore(store);
                     setStoreModal(true);
                   }}
                 />
@@ -405,22 +388,22 @@ const Repair = () => {
         isOpen={isStoreModal}
         onClose={() => {
           setStoreModal(false);
-          setSelectedStoreId(null);
+          setSelectedStore(null);
         }}
-        showHeader
+        showHeader={true}
         heading="Store Contact"
       >
-        {selectedStoreId && storeContactInfo[selectedStoreId] ? (
+        {selectedStore ? (
           <div className="contactNumbers">
-            <p className="title">{storeContactInfo[selectedStoreId].name}</p>
-            <p className="para">{storeContactInfo[selectedStoreId].address}</p>
+            <p className="title">{selectedStore.name}</p>
+            <p className="para">
+              {selectedStore.address} {selectedStore.zipcode}
+            </p>
             <p
               className="number"
-              onClick={() =>
-                handleCallClick(storeContactInfo[selectedStoreId].phone)
-              }
+              onClick={() => handleCallClick(selectedStore.phone)}
             >
-              {storeContactInfo[selectedStoreId].phone}
+              {selectedStore.phone || "N/A"}
             </p>
           </div>
         ) : (

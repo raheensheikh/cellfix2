@@ -31,7 +31,6 @@ const CustomizePcs = () => {
   const [currentPages, setCurrentPages] = useState({});
   const [filteredProductsMap, setFilteredProductsMap] = useState({});
 
-
   const paginate = (items, page, size) => {
     const start = (page - 1) * size;
     return items.slice(start, start + size);
@@ -166,7 +165,7 @@ const CustomizePcs = () => {
                 <Col key={product.id} lg={4} md={4} sm={6} xs={6}>
                   <ProductCard
                     image={
-                      product.images?.[0]?.url ||
+                      product.images?.[0]?.image_path ||
                       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXxZR0_1ISIJx_T4oB5-5OJVSNgSMFLe8eCw&s"
                     }
                     showTitle={true}
@@ -190,8 +189,9 @@ const CustomizePcs = () => {
                 {Array.from({ length: totalPages }, (_, i) => (
                   <li
                     key={i}
-                    className={`page-item ${currentPage === i + 1 ? "active" : ""
-                      }`}
+                    className={`page-item ${
+                      currentPage === i + 1 ? "active" : ""
+                    }`}
                   >
                     <button
                       className="page-link"
@@ -213,7 +213,6 @@ const CustomizePcs = () => {
       ),
     };
   });
-
 
   const selectedBrand = brands[selectedBrandIndex];
   const devices = selectedBrand?.sub_categories?.map((sub) => sub.name) || [];
