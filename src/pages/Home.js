@@ -24,7 +24,7 @@ import Locations from "../components/Locations.jsx";
 import LabeledInput from "../components/LabeledInput.jsx";
 import { apiHelper } from "../services/index.js";
 import { useDispatch, useSelector } from "react-redux";
-import { setLogin, setToken, setUser } from "../redux/slices/userSlice.js";
+import { openLoginModal, setLogin, setToken, setUser } from "../redux/slices/userSlice.js";
 import { toast } from "react-toastify";
 import OverlayLoader from "../components/Loader.jsx";
 import { addToCart, incrementQuantity } from "../redux/slices/cartSlice.js";
@@ -294,6 +294,10 @@ const Home = () => {
       console.log(response.data.data);
       dispatch(incrementQuantity());
     } else {
+      if(error === "Unauthorized"){
+        dispatch(openLoginModal())
+        return
+      }
       toast.error(error);
     }
   };
@@ -308,6 +312,10 @@ const Home = () => {
       dispatch(incrementQuantity());
       navigate("/checkout");
     } else {
+      if(error === "Unauthorized"){
+        dispatch(openLoginModal())
+        return
+      }
       toast.error(error);
     }
   };

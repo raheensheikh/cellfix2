@@ -5,6 +5,7 @@ const initialState = {
   user: {},
   isLogin: false,
   token: "",
+  loginModal: false,
 };
 
 const userSlice = createSlice({
@@ -25,8 +26,14 @@ const userSlice = createSlice({
       state.isLogin = false;
       state.token = "";
     },
+    openLoginModal: (state) => {
+      state.loginModal = true
+    },
+    closeLoginModal: (state) => {
+      state.loginModal = false
+    }
   },
 });
 
-export const { setUser, setLogin, setToken, setLogout } = userSlice.actions;
+export const { setUser, setLogin, setToken, setLogout, openLoginModal, closeLoginModal } = userSlice.actions;
 export default userSlice.reducer;

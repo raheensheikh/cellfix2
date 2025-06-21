@@ -23,7 +23,7 @@ import {
 } from "../redux/slices/cartSlice.js";
 import { apiHelper } from "../services/index.js";
 import { toast } from "react-toastify";
-import { setLogin, setToken, setUser } from "../redux/slices/userSlice.js";
+import { closeLoginModal, setLogin, setToken, setUser } from "../redux/slices/userSlice.js";
 import LabeledInput from "./LabeledInput.jsx";
 
 const Layout = ({
@@ -31,6 +31,7 @@ const Layout = ({
   setModalContact = () => "",
   children,
 }) => {
+  const { token, loginModal } = useSelector((state) => state.user);
   const location = useLocation();
   const [isModalOpen, setModalOpen] = useState(false);
   const [showCart, setShowCart] = useState(false);
@@ -56,9 +57,12 @@ const Layout = ({
   const { totalQuantity, totalPrice, items, rerender } = useSelector(
     (state) => state.cart
   );
-  const { token } = useSelector((state) => state.user);
   console.log(totalPrice);
   const dispatch = useDispatch();
+
+  useEffect(()=>{
+    setLoginModalOpen(loginModal)
+  },[loginModal])
 
   const handleRemove = (id) => {};
 
@@ -79,7 +83,9 @@ const Layout = ({
       setCartData(response.data.response.data);
       dispatch(setTotalCount(totalCount));
     } else {
+      if( error !== "Unauthorized"){
       toast.error(error);
+      }
     }
   };
   const removeItem = async (id) => {
@@ -159,6 +165,7 @@ const Layout = ({
     if (response) {
       console.log(response.data.response.data);
       setLoginModalOpen(false);
+      dispatch(closeLoginModal())
       setModalOpen3(true);
       setPrevFrom("login");
       setUserId(response.data.response.data.user_id);
@@ -188,6 +195,7 @@ const Layout = ({
       setModalOpen2(false);
       setModalOpen3(true);
       setLoginModalOpen(false);
+      dispatch(closeLoginModal())
 
       setPrevFrom("signup");
     } else {
@@ -239,10 +247,13 @@ const Layout = ({
         dispatch(setToken(response.data.response.data.token));
         setModalOpen3(false);
         setLoginModalOpen(false);
+        dispatch(closeLoginModal())
       }
       if (prevFrom === "signup") {
         setModalOpen3(false);
         setLoginModalOpen(true);
+      dispatch(closeLoginModal())
+
       }
     } else {
       toast.error(error);
@@ -616,6 +627,7 @@ const Layout = ({
           isOpen={loginModalOpen}
           onClose={() => {
             setLoginModalOpen(false);
+            dispatch(closeLoginModal())
             setEmail("");
             setPassword("");
           }}
